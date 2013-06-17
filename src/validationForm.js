@@ -1,19 +1,22 @@
 
+// Universally Unique Identifie
+var uuid = 1
+// cache all instance
+var formInstance = {}
+
 function ValidationForm(elem) {
 	this.initialize(elem)
 }
-ValidationForm.instances = {}
 ValidationForm.getInstance = function(elem) {
 	if (!elem) return
 	var el = elem.nodeName ? elem : $(elem)
-	var rand = Math.random() * Math.random()
 	if (!el.id) {
-		el.id = 'formId_' + rand.toString().replace(/\./, '') + new Date().valueOf()
+		el.id = 'formId_' + uuid++
 	}
-	if (!ValidationForm.instances[el.id]) {
-		ValidationForm.instances[el.id] = new ValidationForm(el)
+	if (!formInstance[el.id]) {
+		formInstance[el.id] = new ValidationForm(el)
 	}
-	return ValidationForm.instances[el.id]
+	return formInstance[el.id]
 }
 ValidationForm.prototype = {
 	beforeValidate: noop,
@@ -30,14 +33,13 @@ ValidationForm.prototype = {
 		this.element.onsubmit = function(e) {
 			var ret = false
 			self.beforeValidate()
-			self.valid = Validation.massValidate(self.fields)
+			self.valid = self.execValidate(self.fields)
 			self.valid ? self.onValid() : self.onInvalid()
 			self.afterValidate()
 			if (self.valid) {
 				ret = self.oldOnSubmit.call(this, e || win.event) !== false
 			}
 			if (!ret) return ret
-			
 		}
 	},
 	addField: function(field) {
@@ -51,13 +53,21 @@ ValidationForm.prototype = {
 		})
 		this.fields = victimless
 	},
+	execValidate: function() {
+		var returnValue = true
+		forEach(this.fields, function(obj) {
+			var valid = obj.validate()
+			if (returnValue) returnValue = valid
+		})
+		return returnValue
+	},
 	destroy: function(force) {
 		// only destroy if has no fields and not being forced
 		if (this.fields.length != 0 && !force) return false
 		// remove events - set back to previous events
 		this.element.onsubmit = this.oldOnSubmit
 		// remove from the instances namespace
-		ValidationForm.instances[this.name] = null
+		formInstance[this.name] = null
 		return true
 	}
-}
+};

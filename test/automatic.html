@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset='utf-8'/>
-	<title>Validation</title>
+	<title>Validation automatic performance</title>
 	<link rel="stylesheet" type="text/css" href="common.css" />
 	<style>
 		.ZV_validation_msg{
@@ -51,17 +51,13 @@
 			float: right;
 		}
 	</style>
-	<!--
-	<script src="../../lib/jquery/jquery-1.10.0.js"></script>
-	-->
-	<script type="text/javascript" src="../validation.src.js"></script>
 </head>
 <body id="top">
 	<table cellpadding="0">
 		<caption>存在性检验</caption>
 		<tr>
 			<td class="col">存在性</td>
-			<td><input id="lv1" type="text"/></td>
+			<td><input data-validate="presence" data-validate-err="请输入" data-validate-succ="正确" type="text"/></td>
 		</tr>
 	</table>	
 	<table cellpadding="0">
@@ -171,6 +167,6 @@
 	
 	<div>
 	</div>
-	<script type="text/javascript" src="use.js"></script>
+	<script type="text/javascript" src="../validation.auto.src.js"></script>
 </body>
 </html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'/>
+	<title>Validation</title>
+	<link rel="stylesheet" type="text/css" href="common.css" />
+	<style>
+		.ZV_validation_msg{
+			font-weight:bold;
+			margin:0 0 0 5px;
+		} 
+		.ZV_valid {
+			color:#00CC00;
+		}
+		.ZV_invalid {
+			color:#CC0000;
+		}
+		.ZV_valid_field,
+		input.LV_valid_field:hover, 
+		input.LV_valid_field:active,
+		textarea.LV_valid_field:hover, 
+		textarea.LV_valid_field:active {
+			border: 1px solid #00CC00;
+		}	
+		.ZV_invalid_field, 
+		input.LV_invalid_field:hover, 
+		input.LV_invalid_field:active,
+		textarea.LV_invalid_field:hover, 
+		textarea.LV_invalid_field:active {
+			border: 1px solid #CC0000;
+		}
+		
+		table {
+			border: 0;
+			border-collapse:separate;
+			width: 600px;
+		}
+		table td {
+			border: 0;
+		}
+		.col {
+			width: 10%;
+			text-align: right;
+		}
+		a {
+			float: right;
+		}
+	</style>
+	<!--
+	<script src="../../lib/jquery/jquery-1.10.0.js"></script>
+	-->
+	<script type="text/javascript" src="../validation.src.js"></script>
+</head>
+<body id="top">
+	<form name="myform" action="">
+		<fieldset>
+			<legend>表单示例</legend>
+			<table cellpadding="0">
+				<tr>
+					<td class="col">用户名：</td>
+					<td><input id="uname" type="text"/></td>
+				</tr>
+				<tr>
+					<td class="col">密码：</td>
+					<td><input id="pwd" type="text"/></td>
+				</tr>
+			</table>
+			<br/>
+			<input type="submit" value="提交"/>
+		</fieldset>
+	</form>
+	<script type="text/javascript">
+		var field1 = new Validation('uname', {onlyOnSubmit: true });
+		field1.add('presence');
+		var field2 = new Validation('pwd', {onlyOnSubmit: true });
+		field2.add('presence');
+	</script>
+</body>
+</html>

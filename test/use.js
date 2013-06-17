@@ -1,6 +1,7 @@
 
-var lv1 = new Validation('lv1');
-lv1.add('presence');
+// var lv1 = new Validation('lv1');
+// lv1.add('presence');
+Validation.add('lv1', 'presence')
 
 var lv2 = new Validation('lv2', {onlyOnBlur: true});
 lv2.add('presence numericality');

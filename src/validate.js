@@ -159,4 +159,4 @@ var Validate = {
 	fail: function(errorMsg) {
 		throw new ZVError(errorMsg)
 	}
-}
+};

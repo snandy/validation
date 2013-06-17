@@ -4,7 +4,7 @@ var toString = Object.prototype.toString
 var Util = {}
 
 // Iterator
-function forEach(obj, iterator, context) {
+var forEach = Util.forEach = function(obj, iterator, context) {
 	if ( obj.length === +obj.length ) {
 		for (var i=0; i<obj.length; i++) {
 			if (iterator.call(context, obj[i], i, obj) === true) return
@@ -40,7 +40,6 @@ function noop() {}
 function $(selector) {
 	return win.jQuery ? win.jQuery(selector)[0] : doc.getElementById(selector)
 }
-
 
 // Error class
 function ZVError(errorMsg) {

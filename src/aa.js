@@ -1,7 +1,7 @@
 /*!
  * validation.js v0.1.0
  * http://snandy.github.io/validation
- * @snandy 2013-06-17 17:27:40
+ * @snandy 2013-06-17 14:53:45
  *
  */
 ~function(win, doc, undefined) {
@@ -10,7 +10,7 @@ var toString = Object.prototype.toString
 var Util = {}
 
 // Iterator
-var forEach = Util.forEach = function(obj, iterator, context) {
+function forEach(obj, iterator, context) {
 	if ( obj.length === +obj.length ) {
 		for (var i=0; i<obj.length; i++) {
 			if (iterator.call(context, obj[i], i, obj) === true) return
@@ -47,6 +47,7 @@ function $(selector) {
 	return win.jQuery ? win.jQuery(selector)[0] : doc.getElementById(selector)
 }
 
+
 // Error class
 function ZVError(errorMsg) {
 	this.message = errorMsg
@@ -56,7 +57,7 @@ function ZVError(errorMsg) {
 var Validate = {
 	presence: function(val, option) {
 		var option = option || {}
-		var msg = option.failureMsg || '不能为空!'
+		var msg = option.failureMsg || '涓嶈兘涓虹┖!'
 		if (val === '' || val === null || val === undefined) {
 			Validate.fail(msg)
 		}
@@ -69,11 +70,11 @@ var Validate = {
 		var min = ((option.min) || (option.min === 0)) ? option.min : null
 		var max = ((option.max) || (option.max === 0)) ? option.max : null
 		var is  = ((option.is)  || (option.is === 0))  ? option.is  : null
-		var notANumberMsg   = option.notANumberMsg   || '必须是数字!'
-		var notAnIntegerMsg = option.notAnIntegerMsg || '必须为整数!'
-		var wrongNumberMsg  = option.wrongNumberMsg  || '必须为' + is + '!'
-		var tooLowMsg       = option.tooLowMsg       || '不能小于' + min + '!'
-		var tooHighMsg      = option.tooHighMsg      || '不能大于' + max + '!'
+		var notANumberMsg   = option.notANumberMsg   || '蹇呴』鏄暟瀛�!'
+		var notAnIntegerMsg = option.notAnIntegerMsg || '蹇呴』涓烘暣鏁�!'
+		var wrongNumberMsg  = option.wrongNumberMsg  || '蹇呴』涓�' + is + '!'
+		var tooLowMsg       = option.tooLowMsg       || '涓嶈兘灏忎簬' + min + '!'
+		var tooHighMsg      = option.tooHighMsg      || '涓嶈兘澶т簬' + max + '!'
 		
 		if ( !isFinite(val) ) Validate.fail(notANumberMsg)
 		
@@ -101,7 +102,7 @@ var Validate = {
 	format: function(val, option) {
 		var val = String(val)
 		var option = option || {}
-		var message = option.failureMsg || '格式不对!'
+		var message = option.failureMsg || '鏍煎紡涓嶅!'
 		var pattern = option.pattern || /./
 		var negate = option.negate || false
 		if (!negate && !pattern.test(val)) Validate.fail(message) // normal
@@ -111,7 +112,7 @@ var Validate = {
 	email: function(val, option) {
 		var option = option || {}
 		var reg = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-		var message = option.failureMsg || '必须为一个有效的电子邮箱地址!'
+		var message = option.failureMsg || '蹇呴』涓轰竴涓湁鏁堢殑鐢靛瓙閭鍦板潃!'
 		Validate.format(val, {failureMsg: message, pattern: reg})
 		return true
 	},
@@ -121,9 +122,9 @@ var Validate = {
 		var min = ((option.min) || (option.min == 0)) ? option.min : null
 		var max = ((option.max) || (option.max == 0)) ? option.max : null
 		var is  = ((option.is)  || (option.is == 0))  ? option.is  : null
-		var wrongLengthMessage = option.wrongLengthMessage || '必须是' + is + '个字符长度!'
-		var tooShortMessage    = option.tooShortMessage || '不能小于' + min + '个字符长度!'
-		var tooLongMessage     = option.tooLongMessage || '不能大于' + max + '个字符长度!'
+		var wrongLengthMessage = option.wrongLengthMessage || '蹇呴』鏄�' + is + '涓瓧绗﹂暱搴�!'
+		var tooShortMessage    = option.tooShortMessage || '涓嶈兘灏忎簬' + min + '涓瓧绗﹂暱搴�!'
+		var tooLongMessage     = option.tooLongMessage || '涓嶈兘澶т簬' + max + '涓瓧绗﹂暱搴�!'
 		switch (true) {
 			case (is !== null):
 				if ( val.length != Number(is) ) Validate.fail(wrongLengthMessage)
@@ -145,7 +146,7 @@ var Validate = {
 	},
 	inclusion: function(val, option) {
 		var option = option || {}
-		var message = option.failureMsg || '必须是列表中指定的元素!'
+		var message = option.failureMsg || '蹇呴』鏄垪琛ㄤ腑鎸囧畾鐨勫厓绱 !'
 		var caseSensitive = (option.caseSensitive === false) ? false : true
 		if (option.allowNull && val == null) {
 			return true
@@ -183,7 +184,7 @@ var Validate = {
 	},
 	exclusion: function(val, option) {
 		var option = option || {}
-		option.failureMsg = option.failureMsg || '不能输入列表中的元素!'
+		option.failureMsg = option.failureMsg || '涓嶈兘杈撳叆鍒楄〃涓殑鍏冪礌!'
 		option.negate = true
 		Validate.inclusion(val, option)
 		return true
@@ -193,7 +194,7 @@ var Validate = {
 			throw new Error('Error validating confirmation: Id of element to match must be provided')
 		}
 		var option = option || {}
-		var message = option.failureMsg || '两次输入不一致!'
+		var message = option.failureMsg || '涓ゆ杈撳叆涓嶄竴鑷�!'
 		var match = option.match.nodeName ? option.match : $(option.match)
 		if (!match) {
 			throw new Error('There is no reference with name of, or element with id of ' + option.match)
@@ -204,7 +205,7 @@ var Validate = {
 	},
 	acceptance: function(val, option) {
 		var option = option || {}
-		var message = option.failureMsg || '必须同意!'
+		var message = option.failureMsg || '蹇呴』鍚屾剰!'
 		if (!val) {
 			Validate.fail(message)
 		}
@@ -219,14 +220,13 @@ function Validation(elem, option) {
 	if (!elem) return
 	this.element = elem.nodeName ? elem : $(elem)
 	if (!this.element) throw new Error('element is not exits')
-	this.initialize(option)
+	this.initialize(elem, option)
 }
 
-Validation.add = function(elem, validate, instanceOption, validateOption) {
-	var vObj = new Validation(elem, instanceOption)
-	vObj.add(validate, validateOption)
-	return vObj
-}
+// Validation.add = function(elem /*selector*/, action, option) {
+	// var vObj = new Validation(elem, option)
+	// vObj.add(action)
+// }
 
 Validation.prototype = {
 	validClass: 'ZV_valid',
@@ -234,16 +234,16 @@ Validation.prototype = {
 	messageClass: 'ZV_validation_msg',
 	validFieldClass: 'ZV_valid_field',
 	invalidFieldClass: 'ZV_invalid_field',
-	initialize: function(option) {
-		var element = this.element
+	initialize: function(elem, option) {
+		// default properties that could not be initialised above
 		this.validations = []
 		this.elemType = this.getType()
-		this.form = element.form
+		this.form = this.element.form
 
 		// options
 		var option = option || {}
-		this.validMsg = option.validMsg || element.getAttribute('data-validate-succ') || '填写正确'
-		var node = option.insertAfterWhatNode || element
+		this.validMsg = option.validMsg || 'OK'
+		var node = option.insertAfterWhatNode || this.element
 		this.insertAfterWhatNode = node.nodeType ? node : $(node)
 		this.onlyOnBlur = option.onlyOnBlur || false
 		this.wait = option.wait || 0
@@ -262,7 +262,7 @@ Validation.prototype = {
 			this.insertMessage(this.createMessage())
 			this.addFieldClass()
 		}
-		this.afterInvalid  = option.afterInvalid || noop
+		this.afterInvalid = option.afterInvalid || noop
 		this.afterValidate = option.afterValidate || noop
 		
 		// add to form if it has been provided
@@ -272,14 +272,14 @@ Validation.prototype = {
 		}
 
 		// collect old events
-		this.oldOnFocus  = element.onfocus  || noop
-		this.oldOnBlur   = element.onblur   || noop
-		this.oldOnClick  = element.onclick  || noop
-		this.oldOnChange = element.onchange || noop
-		this.oldOnKeyup  = element.onkeyup  || noop
+		this.oldOnFocus  = this.element.onfocus  || noop
+		this.oldOnBlur   = this.element.onblur   || noop
+		this.oldOnClick  = this.element.onclick  || noop
+		this.oldOnChange = this.element.onchange || noop
+		this.oldOnKeyup  = this.element.onkeyup  || noop
 		
 		var self = this
-		element.onfocus = function(e) {
+		this.element.onfocus = function(e) {
 			self.doOnFocus(e)
 			return self.oldOnFocus.call(this, e)
 		}
@@ -288,25 +288,25 @@ Validation.prototype = {
 		
 		switch (this.elemType) {
 			case TYPE.checkbox:
-				element.onclick = function(e) {
+				this.element.onclick = function(e) {
 					self.validate()
 					return self.oldOnClick.call(this, e)
 				}
 			case TYPE.select:
 			case TYPE.file:
-				element.onchange = function(e) {
+				this.element.onchange = function(e) {
 					self.validate()
 					return self.oldOnChange.call(this, e)
 				}
 				break;
 			default:
 				if (!this.onlyOnBlur) {
-					element.onkeyup = function(e) {
+					this.element.onkeyup = function(e) {
 						self.deferValidation()
 						return self.oldOnKeyup.call(this, e)
 					}
 				}
-				element.onblur = function(e) {
+				this.element.onblur = function(e) {
 					self.doOnBlur(e)
 					return self.oldOnBlur.call(this, e)
 				}
@@ -343,9 +343,6 @@ Validation.prototype = {
 	add: function(op, option) {
 		var self = this
 		option = option || {}
-		if (!option.failureMsg) {
-			option.failureMsg = self.element.getAttribute('data-validate-err')
-		}
 		if ( Util.isString(op) ) {
 			forEach(op.split(' '), function(n, i) {
 				self.validations[i] = {
@@ -368,10 +365,16 @@ Validation.prototype = {
 		return this
 	},
 	deferValidation: function(e) {
+		if (this.wait >= 300) {
+			this.removeMessageAndFieldClass();
+		}
 		var self = this
-		if (this.wait >= 300) this.removeMessageAndFieldClass()
-		if (this.timeout) clearTimeout(self.timeout)
-		this.timeout = setTimeout(function(){ self.validate()}, self.wait)
+		if (this.timeout) {
+			clearTimeout(self.timeout)
+		}
+		this.timeout = setTimeout(function(){ 
+			self.validate()
+		}, self.wait)
 	},
 	doOnBlur: function(e) {
 		this.focused = false
@@ -559,9 +562,6 @@ Validation.prototype = {
 	}
 };
 
-// exports Util to Validation
-Validation.Util = Util
-
 
 // Universally Unique Identifie
 var uuid = 1
@@ -635,12 +635,156 @@ ValidationForm.prototype = {
 		return true
 	}
 };
-
-// Expose Validation to the global object or as AMD module
-if (typeof define === 'function' && define.amd) {
-	define('Validation', [], function() { return Validation } )
-} else {
-	win.Validation = Validation
-}
-
+/**
+ * JavaScript Selector
+ * Copyright (c) 2010 snandy
+ * Blog: http://snandy.cnglogs.com
+ * QQ缇�: 34580561
+ * 
+ * $ 鑾峰彇鍏冪礌, 鍦―OM涓娇鐢ㄩ绻佺殑锛屾牴鎹�2/8鍘熷垯鍙疄鐜版渶甯哥敤鐨勫洓绉�
+ * 
+ * @param {Object} selector
+ * @param {Object} context
+ * 
+ * 1, 閫氳繃id鑾峰彇,璇ュ厓绱犳槸鍞竴鐨�
+ *	   $('#id')
+ * 
+ * 2, 閫氳繃className鑾峰彇
+ *	$('.cls') 鑾峰彇鏂囨。涓墍鏈塩lassName涓篶ls鐨勫厓绱 
+ *	$('.cls', el)
+ *	$('.cls', '#id')
+ *	$('span.cls') 鑾峰彇鏂囨。涓墍鏈塩lassName涓篶ls鐨剆pan鍏冪礌
+ *	$('span.cls', el) 鑾峰彇鎸囧畾鍏冪礌涓璫lassName涓篶ls鐨勫厓绱 , el涓篐TMLElement (涓嶆帹鑽�)
+ *	$('span.cls', '#id') 鑾峰彇鎸囧畾id鐨勫厓绱犱腑className涓篶ls鐨勫厓绱 
+ *	
+ * 3, 閫氳繃tagName鑾峰彇
+ *	$('span') 鑾峰彇鏂囨。涓墍鏈夌殑span鍏冪礌
+ *	$('span', el) 鑾峰彇鎸囧畾鍏冪礌涓殑span鍏冪礌, el涓篐TMLElement (涓嶆帹鑽�)
+ *	$('span', '#id') 鑾峰彇鎸囧畾id鐨勫厓绱犱腑鐨剆pan鍏冪礌
+ * 
+ * 4, 閫氳繃attribute鑾峰彇
+ *	$('[name]') 鑾峰彇鏂囨。涓叿鏈夊睘鎬ame鐨勫厓绱 
+ *	$('[name]', el)
+ *	$('[name]', '#id')
+ *	$('[name=uname]') 鑾峰彇鏂囨。涓墍鏈夊睘鎬ame=uname鐨勫厓绱 
+ *	$('[name=uname]', el)
+ *	$('[name=uname]', '#id')
+ *	$('input[name=uname]') 鑾峰彇鏂囨。涓墍鏈夊睘鎬ame=uname鐨刬nput鍏冪礌
+ *	$('input[name=uname]', el)
+ *	$('input[name=uname]', '#id')
+ */
+var query = function(win, doc, undefined) {
+	
+	// Save a reference to core methods
+	var slice = Array.prototype.slice
+	
+	// selector regular expression
+	var rId = /^#[\w\-]+/
+	var	rTag = /^([\w\*]+)$/
+	var	rCls = /^([\w\-]+)?\.([\w\-]+)/
+	var	rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
+	
+	// For IE9/Firefox/Safari/Chrome/Opera
+	var makeArray = function(obj) {
+		return slice.call(obj, 0)
+	}
+	// For IE6/7/8
+	try{
+		slice.call(doc.documentElement.childNodes, 0)[0].nodeType
+	} catch(e) {
+		makeArray = function(obj) {
+			var result = []
+			for (var i = 0, len = obj.length; i < len; i++) {
+				result[i] = obj[i]
+			}
+			return result
+		}
+	}
+	
+	function byId(id) {
+		return doc.getElementById(id)
+	}
+	function check(attr, val, node) {
+		var reg = RegExp('(?:^|\\s+)' + val + '(?:\\s+|$)')
+		var	attribute = attr === 'className' ? 
+				node.className : node.getAttribute(attr)
+		if (attribute) {
+			if (val) {
+				if (reg.test(attribute)) return true
+			} else {
+				return true
+			}
+		}
+		return false
+	}	
+	function filter(all, attr, val) {
+		var el, result = []
+		var	i = 0, r = 0
+		while ( (el = all[i++]) ) {
+			if ( check(attr, val, el) ) {
+				result[r++] = el
+			}
+		}
+		return result
+	}
+		
+	function query(selector, context) {
+		var s = selector, arr = []
+		var context = context === undefined ? doc : typeof context === 'string' ?
+				byId(context.substr(1, context.length)) : context
+		
+		// id 杩樻槸鐢╠ocuemnt.getElementById鏈€蹇�
+		if ( rId.test(s) ) {
+			arr[0] = byId( s.substr(1, s.length) )
+			return arr
+		}
+		// 浼樺厛浣跨敤querySelector锛岀幇浠ｆ祻瑙堝櫒閮藉疄鐜板畠浜�
+		if (context.querySelectorAll) {
+			if (context.nodeType === 1) {
+				var old = context.id, id = context.id = '__ZZ__'
+				try {
+					return context.querySelectorAll('#' + id + ' ' + s)
+				} catch(e){
+					throw new Error('querySelectorAll: ' + e)
+				} finally {
+					old ? context.id = old : context.removeAttribute('id')
+				}
+			}
+			return makeArray(context.querySelectorAll(s))
+		}
+		// className
+		if ( rCls.test(s) ) {
+			var ary = s.split('.')
+			var	tag = ary[0] 
+			var	cls = ary[1]
+			if (context.getElementsByClassName) {
+				var elems = context.getElementsByClassName(cls)
+				if (tag) {
+					for (var i = 0, len = elems.length; i < len; i++) {
+						var el = elems[i]
+						el.tagName.toLowerCase() === tag && arr.push(el)
+					}
+					return arr
+				} else {
+					return makeArray(elems)
+				}
+			} else {
+				var all = context.getElementsByTagName(tag || '*')
+				return filter(all, 'className', cls)
+			}
+		}
+		// Tag name
+		if ( rTag.test(s) ) {
+			return makeArray(context.getElementsByTagName(s))
+		}
+		// Attribute
+		if ( rAttr.test(s) ) {
+			var result = rAttr.exec(s)
+			var all = context.getElementsByTagName(result[1] || '*')
+			return filter(all, result[2], result[4])
+		}
+	}
+	
+	return query
 }(this, document);
+

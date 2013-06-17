@@ -3,32 +3,32 @@ function Validation(elem, option) {
 	if (!elem) return
 	this.element = elem.nodeName ? elem : $(elem)
 	if (!this.element) throw new Error('element is not exits')
-	this.initialize(elem, option)
+	this.initialize(option)
 }
-Validation.massValidate = function(validations) {
-	var returnValue = true
-	forEach(validations, function(obj) {
-		var valid = obj.validate()
-		if (returnValue) returnValue = valid
-	})
-	return returnValue
+
+Validation.add = function(elem, validate, instanceOption, validateOption) {
+	var vObj = new Validation(elem, instanceOption)
+	vObj.add(validate, validateOption)
+	return vObj
 }
+
 Validation.prototype = {
 	validClass: 'ZV_valid',
 	invalidClass: 'ZV_invalid',
 	messageClass: 'ZV_validation_msg',
 	validFieldClass: 'ZV_valid_field',
 	invalidFieldClass: 'ZV_invalid_field',
-	initialize: function(elem, option) {
-		// default properties that could not be initialised above
+	initialize: function(option) {
+		var element = this.element
 		this.validations = []
-		this.elementType = this.getType()
-		this.form = this.element.form
+		this.elemType = this.getType()
+		this.form = element.form
 
 		// options
 		var option = option || {}
-		this.validMsg = option.validMsg || 'OK'
-		var node = option.insertAfterWhatNode || this.element
+		this.validMsg = option.validMsg || 
+				element.getAttribute('data-validate-succ') || '填写正确'
+		var node = option.insertAfterWhatNode || element
 		this.insertAfterWhatNode = node.nodeType ? node : $(node)
 		this.onlyOnBlur = option.onlyOnBlur || false
 		this.wait = option.wait || 0
@@ -36,18 +36,18 @@ Validation.prototype = {
 		
 		// hooks
 		this.beforeValidate = option.beforeValidate || noop
-		this.beforeValid = option.beforeValid || noop
+		this.beforeValid    = option.beforeValid || noop
 		this.onValid = option.onValid || function() {
 			this.insertMessage(this.createMessage())
 			this.addFieldClass()
 		}
-		this.afterValid = option.afterValid || noop
+		this.afterValid    = option.afterValid || noop
 		this.beforeInvalid = option.beforeInvalid || noop
 		this.onInvalid = option.onInvalid || function() {
 			this.insertMessage(this.createMessage())
 			this.addFieldClass()
 		}
-		this.afterInvalid = option.afterInvalid || noop
+		this.afterInvalid  = option.afterInvalid || noop
 		this.afterValidate = option.afterValidate || noop
 		
 		// add to form if it has been provided
@@ -57,45 +57,45 @@ Validation.prototype = {
 		}
 
 		// collect old events
-		this.oldOnFocus  = this.element.onfocus  || noop
-		this.oldOnBlur   = this.element.onblur   || noop
-		this.oldOnClick  = this.element.onclick  || noop
-		this.oldOnChange = this.element.onchange || noop
-		this.oldOnKeyup  = this.element.onkeyup  || noop
+		this.oldOnFocus  = element.onfocus  || noop
+		this.oldOnBlur   = element.onblur   || noop
+		this.oldOnClick  = element.onclick  || noop
+		this.oldOnChange = element.onchange || noop
+		this.oldOnKeyup  = element.onkeyup  || noop
 		
 		var self = this
-		this.element.onfocus = function(e) {
+		element.onfocus = function(e) {
 			self.doOnFocus(e)
 			return self.oldOnFocus.call(this, e)
 		}
 		
 		if (this.onlyOnSubmit) return
 		
-		switch (this.elementType) {
+		switch (this.elemType) {
 			case TYPE.checkbox:
-				this.element.onclick = function(e) {
+				element.onclick = function(e) {
 					self.validate()
 					return self.oldOnClick.call(this, e)
 				}
 			case TYPE.select:
 			case TYPE.file:
-				this.element.onchange = function(e) {
+				element.onchange = function(e) {
 					self.validate()
 					return self.oldOnChange.call(this, e)
 				}
 				break;
 			default:
 				if (!this.onlyOnBlur) {
-					this.element.onkeyup = function(e) {
+					element.onkeyup = function(e) {
 						self.deferValidation()
 						return self.oldOnKeyup.call(this, e)
 					}
 				}
-				this.element.onblur = function(e) {
+				element.onblur = function(e) {
 					self.doOnBlur(e)
 					return self.oldOnBlur.call(this, e)
 				}
-		}		
+		}
 	},
 	destroy: function() {
 		if (this.formObj) {
@@ -107,18 +107,18 @@ Validation.prototype = {
 		// remove events - set them back to the previous events
 		this.element.onfocus = this.oldOnFocus
 		if (!this.onlyOnSubmit) {
-			switch (this.elementType) {
+			switch (this.elemType) {
 				case TYPE.checkbox:
 					this.element.onclick = this.oldOnClick
 				// let it run into the next to add a change event too
 				case TYPE.select:
 				case TYPE.file:
 					this.element.onchange = this.oldOnChange
-					break;
+					break
 				default:
 					if (!this.onlyOnBlur) {
 						this.element.onkeyup = this.oldOnKeyup
-					} 
+					}
 					this.element.onblur = this.oldOnBlur
 			}
 		}
@@ -128,6 +128,9 @@ Validation.prototype = {
 	add: function(op, option) {
 		var self = this
 		option = option || {}
+		if (!option.failureMsg) {
+			option.failureMsg = self.element.getAttribute('data-validate-err')
+		}
 		if ( Util.isString(op) ) {
 			forEach(op.split(' '), function(n, i) {
 				self.validations[i] = {
@@ -150,16 +153,10 @@ Validation.prototype = {
 		return this
 	},
 	deferValidation: function(e) {
-		if (this.wait >= 300) {
-			this.removeMessageAndFieldClass();
-		}
 		var self = this
-		if (this.timeout) {
-			clearTimeout(self.timeout)
-		}
-		this.timeout = setTimeout(function(){ 
-			self.validate()
-		}, self.wait)
+		if (this.wait >= 300) this.removeMessageAndFieldClass()
+		if (this.timeout) clearTimeout(self.timeout)
+		this.timeout = setTimeout(function(){ self.validate()}, self.wait)
 	},
 	doOnBlur: function(e) {
 		this.focused = false
@@ -172,24 +169,24 @@ Validation.prototype = {
 	getType: function() {
 		var element = this.element
 		var ntype = element.type.toUpperCase()
-		var nname = element.nodeName.toUpperCase()		
+		var nname = element.nodeName.toUpperCase()
 		switch (true) {
 			case (nname == 'TEXTAREA'):
-				return TYPE.textarea;
+				return TYPE.textarea
 			case (nname == 'INPUT' && ntype == 'TEXT'):
-				return TYPE.text;
+				return TYPE.text
 			case (nname == 'INPUT' && ntype == 'PASSWORD'):
-				return TYPE.password;
+				return TYPE.password
 			case (nname == 'INPUT' && ntype == 'CHECKBOX'):
-				return TYPE.checkbox;
+				return TYPE.checkbox
 			case (nname == 'INPUT' && ntype == 'FILE'):
-				return TYPE.file;
+				return TYPE.file
 			case (nname == 'SELECT'):
-				return TYPE.select;
+				return TYPE.select
 			case (nname == 'INPUT'):
-				throw new Error('Cannot use Validation on an ' + ntype.toLowerCase() + ' input');
+				throw new Error('Cannot use Validation on an ' + ntype.toLowerCase() + ' input')
 			default:
-				throw new Error('Element must be an input, select, or textarea - ' + nname.toLowerCase() + ' was given');
+				throw new Error('Element must be an input/select/textarea - ' + nname.toLowerCase() + ' was given')
 		}
 	},
 	doValidations: function() {
@@ -222,10 +219,10 @@ Validation.prototype = {
 		}
 		// select and checkbox elements values are handled differently
 		var element = this.element
-		var elemType = this.elementType 
-		var val = (elemType === TYPE.select) ? element.options[element.selectedIndex].value : element.value
+		var elType  = this.elemType 
+		var val = (elType === TYPE.select) ? element.options[element.selectedIndex].value : element.value
 		if (func == Validate.acceptance) {
-			if (elemType != TYPE.checkbox) {
+			if (elType != TYPE.checkbox) {
 				throw new Error('Element to validate acceptance must be a checkbox')
 			}
 			val = element.checked
@@ -289,7 +286,7 @@ Validation.prototype = {
 		}
 		var val = this.element.value
 		var whatNode = this.insertAfterWhatNode
-		if ( (this.showMessageWhenEmpty && (this.elementType === TYPE.checkbox || val === '')) || val !== '' ) {
+		if ( (this.showMessageWhenEmpty && (this.elemType === TYPE.checkbox || val === '')) || val !== '' ) {
 			var className = this.validateFailed ? this.invalidClass : this.validClass
 			elem.className += ' ' + this.messageClass + ' ' + className;
 			var parent = whatNode.parentNode
@@ -307,13 +304,13 @@ Validation.prototype = {
 		
 		this.removeFieldClass()
 		if (!this.validateFailed) {
-			if (this.showMessageWhenEmpty || element.value != '') {
-				if (element.className.indexOf(validCls) == -1) {
+			if (this.showMessageWhenEmpty || element.value !== '') {
+				if (element.className.indexOf(validCls) === -1) {
 					element.className += ' ' + validCls
 				}
 			}
 		} else {
-			if (element.className.indexOf(invalidCls) == -1) {
+			if (element.className.indexOf(invalidCls) === -1) {
 				element.className += ' ' + invalidCls
 			}
 		}
@@ -324,7 +321,7 @@ Validation.prototype = {
 		while (el.nextSibling) {
 			if (el.nextSibling.nodeType === 1) {
 				nextEl = el.nextSibling
-				break;
+				break
 			}
 			el = el.nextSibling
 		}
@@ -334,10 +331,10 @@ Validation.prototype = {
 	},
 	removeFieldClass: function() {
 		var cls = this.element.className
-		if (cls.indexOf(this.invalidFieldClass) != -1) {
+		if (cls.indexOf(this.invalidFieldClass) !== -1) {
 			this.element.className = cls.split(this.invalidFieldClass).join('')
 		}
-		if (cls.indexOf(this.validFieldClass) != -1) {
+		if (cls.indexOf(this.validFieldClass) !== -1) {
 			this.element.className = cls.split(this.validFieldClass).join(' ')
 		}
 	},
@@ -345,4 +342,7 @@ Validation.prototype = {
 		this.removeMessage()
 		this.removeFieldClass()
 	}
-}
+};
+
+// exports Util to Validation
+Validation.Util = Util

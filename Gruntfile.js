@@ -35,19 +35,29 @@ module.exports = function(grunt) {
 			options: {
 				banner: banner
 			},
-			validation: {
+			// 核心版
+			core: {
 				// intro在首部，outro在尾部
-				src: ['src/intro.js', 'src/*.js', '!src/outro.js', 'src/outro.js'],
+				src: ['src/intro.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
 				dest: 'validation.src.js'
+			},
+			// 自动执行版
+			auto: {
+				src: ['src/intro.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js', 'src/selector.js'],
+				dest: 'validation.auto.src.js'
 			}
 		},
 		uglify: {
 			options: {
 				banner: banner
 			},
-			build: {
+			core: {
 				src: ['validation.src.js'],
 				dest: 'validation.js'
+			},
+			auto: {
+				src: ['validation.auto.src.js'],
+				dest: 'validation.auto.js'
 			}
 		}
 	});
@@ -55,7 +65,7 @@ module.exports = function(grunt) {
 	// 载入concat和uglify插件，分别对于合并和压缩
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
+	// grunt.loadNpmTasks('grunt-contrib-jshint');
 	
 	// 注册任务
 	grunt.registerTask('default', ['concat', 'uglify']);
