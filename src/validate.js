@@ -134,6 +134,15 @@ var Validate = {
 		Validate.inclusion(val, option)
 		return true
 	},
+	chinese: function(val, option) {
+		var option = option || {}
+		var msg = option.failureMsg || '请输入中文!'
+		var reg = /[\u4E00-\u9FA5]/
+		if (!reg.test(val)) {
+			Validation.fail(msg)
+		}
+		return true
+	},
 	confirmation: function(val, option) {
 		if (!option.match) {
 			throw new Error('Error validating confirmation: Id of element to match must be provided')
