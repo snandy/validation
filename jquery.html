@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'/>
+	<title>Validation</title>
+	<link rel="stylesheet" href="stylesheets/styles.css">
+	<style>
+		.ZV_validation_msg{
+			font-weight:bold;
+			margin:0 0 0 5px;
+		} 
+		.ZV_valid {
+			color:#00CC00;
+		}
+		.ZV_invalid {
+			color:#CC0000;
+		}
+		.ZV_valid_field,
+		input.LV_valid_field:hover, 
+		input.LV_valid_field:active,
+		textarea.LV_valid_field:hover, 
+		textarea.LV_valid_field:active {
+			border: 1px solid #00CC00;
+		}	
+		.ZV_invalid_field, 
+		input.LV_invalid_field:hover, 
+		input.LV_invalid_field:active,
+		textarea.LV_invalid_field:hover, 
+		textarea.LV_invalid_field:active {
+			border: 1px solid #CC0000;
+		}
+		.submit {
+			text-align: right;
+		}
+	</style>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="javascripts/validation.js"></script>
+</head>
+<body id="top">
+    <div class="wrapper">
+        <header>
+            <h2>和jQuery一起</h2>
+            <p style="width:100%">页面中如果引入了jQuery，Validation.js可以很好的兼容。Validation的第一个参数可以是CSS Selector</p>
+        </header>
+        <section>
+                <p>
+                    必填项：<input type="text" class="a">
+                </p>
+                
+                <p>　数字：<input name="b" type="text"/></p>
+                
+<code><pre>
+// ClassName
+Validation.add('.a', 'presence')
+// Attribute
+Validation.add('[name=b]', 'numericality ')
+</pre></code>
+
+    	</section>
+	</div>
+	<script type="text/javascript">
+        Validation.add('.a', 'presence')
+        Validation.add('[name=b]', 'numericality ')
+	</script>
+</body>
+</html>

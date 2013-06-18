@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'/>
+	<title>Validation</title>
+	<link rel="stylesheet" href="stylesheets/styles.css">
+	<style>
+		.ZV_validation_msg{
+			font-weight:bold;
+			margin:0 0 0 5px;
+		} 
+		.ZV_valid {
+			color:#00CC00;
+		}
+		.ZV_invalid {
+			color:#CC0000;
+		}
+		.ZV_valid_field,
+		input.LV_valid_field:hover, 
+		input.LV_valid_field:active,
+		textarea.LV_valid_field:hover, 
+		textarea.LV_valid_field:active {
+			border: 1px solid #00CC00;
+		}	
+		.ZV_invalid_field, 
+		input.LV_invalid_field:hover, 
+		input.LV_invalid_field:active,
+		textarea.LV_invalid_field:hover, 
+		textarea.LV_invalid_field:active {
+			border: 1px solid #CC0000;
+		}
+		.submit {
+			text-align: right;
+		}
+	</style>
+	<script src="javascripts/validation.js"></script>
+</head>
+<body id="top">
+    <div class="wrapper">
+        <header>表单示例 - 仅在提交时验证</header>
+        <section>
+    	<form name="myform" action="">
+            <p>用户名：<input id="uname" type="text"/></p>
+            <p>　密码：<input id="pwd" type="text"/></p>
+    		<p class="submit"><input type="submit" value="提交"/></p>
+    	</form>
+<p>代码：</p>
+<code><pre>
+Validation.add('uname', 'presence', {onlyOnSubmit: true })
+Validation.add('pwd', 'presence', {onlyOnSubmit: true })
+</pre></code>
+    	</section>
+	</div>
+	<script type="text/javascript">
+        Validation.add('uname', 'presence', {onlyOnSubmit: true })
+        Validation.add('pwd', 'presence', {onlyOnSubmit: true })
+	</script>
+</body>
+</html>
