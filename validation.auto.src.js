@@ -1,7 +1,7 @@
 /*!
  * validation.js v0.1.0
  * http://snandy.github.io/validation
- * @snandy 2013-06-18 16:09:53
+ * @snandy 2013-06-18 16:27:35
  *
  */
 ~function(win, doc, undefined) {
@@ -446,10 +446,10 @@ Validation.prototype = {
         }
         if ( Util.isString(op) ) {
             forEach(op.split(' '), function(n, i) {
-                self.validations[i] = {
+                self.validations.push({
                     validateFunc: Validate[n],
                     params: option
-                }
+                })
             })
         }
     },
