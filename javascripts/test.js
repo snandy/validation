@@ -60,7 +60,7 @@ zv21Obj.add('presence')
 zv21Obj.add('chinese')
 zv21Obj.add('size', {min: 4, max: 10})
 
-
+Validation.add('zv22', 'acceptance')
 
 
 

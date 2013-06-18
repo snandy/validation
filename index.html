@@ -52,7 +52,7 @@
 					<li><a href="#example_email">E-Mail校验</a></li>
 					<li><a href="#example_chinese">中文校验</a></li>
 					<li><a href="#example_combination">组合校验</a></li>
-					<li><a href="#example_presence">确认校验</a></li>
+					<li><a href="#example_accept">认可校验</a></li>
 					<li><a href="#example_presence">表单校验</a></li>
 				</ul>
 				
@@ -204,6 +204,13 @@ var zv21Obj = new Validation('zv21')
 zv21Obj.add('presence')
 zv21Obj.add('chinese')
 zv21Obj.add('size', {min: 4, max: 10})
+</pre></code>
+
+                <br/>
+                <h2 id="example_accept">认可校验</h2>
+                <p>请勾选：<input id="zv22" type="checkbox" style="width:10px"/></p>
+<code><pre>
+Validation.add('zv22', 'acceptance')
 </pre></code>
 
 			</section>
