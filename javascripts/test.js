@@ -51,7 +51,9 @@ Validation.add('zv18', 'email')
 
 Validation.add('zv19', 'chinese')
 
-
+var zv20Obj = new Validation('zv20')
+zv20Obj.add('presence')
+zv20Obj.add('chinese')
 
 
 

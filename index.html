@@ -16,9 +16,7 @@
 		<div class="wrapper">
 			<header>
 				<h1>Validation</h1>
-				<p>
-					Validate your forms, frontend, without writting a single line of javascript!
-				</p>
+				<p>Validate your forms, frontend, without writting a single line of javascript!</p>
 				<p class="view">
 					<a href="https://github.com/snandy/validation">View the Project on GitHub <small>snandy/validation</small></a>
 				</p>
@@ -52,8 +50,8 @@
 					<li><a href="#example_exclusion">排它性校验</a></li>
 					<li><a href="#example_format">格式校验</a></li>
 					<li><a href="#example_email">E-Mail校验</a></li>
-					<li><a href="#example_presence">中文校验</a></li>
-					<li><a href="#example_presence">组合校验</a></li>
+					<li><a href="#example_chinese">中文校验</a></li>
+					<li><a href="#example_combination">组合校验</a></li>
 					<li><a href="#example_presence">确认校验</a></li>
 					<li><a href="#example_presence">表单校验</a></li>
 				</ul>
@@ -183,6 +181,20 @@ Validation.add('zv18', 'email')
 <code><pre>
 Validation.add('zv19', 'chinese')
 </pre></code>
+
+                <br/>
+                <h2 id="example_combination">组合校验</h2>
+                <p>请输入中文，且必填：<input id="zv20" type="text"/></p>
+<code><pre>
+var zv20Obj = new Validation('zv20')
+zv20Obj.add('presence')
+zv20Obj.add('chinese')
+</pre></code>
+                <p>或者简写为一行，各个规则以空格间隔</p>
+<code><pre>
+zv20Obj.add('presence chinese')
+</pre></code>
+
 
 			</section>
 		</div>
