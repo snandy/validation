@@ -171,12 +171,10 @@ var Validate = {
             }
         }
         var found = false
-        for (var i = 0, length = within.length; i < length; ++i) {
-            if (within[i] == val) found = true
-            if (option.partialMatch) {
-                if (val.indexOf(within[i]) != -1) found = true
-            }
-        }
+        forEach(within, function(it) {
+            if (it === val) found = true
+            if (option.partialMatch && val.indexOf(it) !== -1) found = true
+        })
         if ( (!option.negate && !found) || (option.negate && found) ) {
             Validate.fail(message)
         }
@@ -204,9 +202,9 @@ var Validate = {
     chinese: function(val, option) {
         var option = option || {}
         var msg = option.failureMsg || '请输入中文!'
-        var reg = /[\u4E00-\u9FA5]/
+        var reg = /^[\u4E00-\u9FA5]+$/
         if (!reg.test(val)) {
-            Validation.fail(msg)
+            Validate.fail(msg)
         }
         return true
     },

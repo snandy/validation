@@ -1,7 +1,7 @@
 /*!
  * validation.js v0.1.0
  * http://snandy.github.io/validation
- * @snandy 2013-06-18 15:35:44
+ * @snandy 2013-06-18 16:09:53
  *
  */
 ~function(win, doc, undefined) {
@@ -225,12 +225,10 @@ var Validate = {
             }
         }
         var found = false
-        for (var i = 0, length = within.length; i < length; ++i) {
-            if (within[i] == val) found = true
-            if (option.partialMatch) {
-                if (val.indexOf(within[i]) != -1) found = true
-            }
-        }
+        forEach(within, function(it) {
+            if (it === val) found = true
+            if (option.partialMatch && val.indexOf(it) !== -1) found = true
+        })
         if ( (!option.negate && !found) || (option.negate && found) ) {
             Validate.fail(message)
         }
@@ -258,9 +256,9 @@ var Validate = {
     chinese: function(val, option) {
         var option = option || {}
         var msg = option.failureMsg || '请输入中文!'
-        var reg = /[\u4E00-\u9FA5]/
+        var reg = /^[\u4E00-\u9FA5]+$/
         if (!reg.test(val)) {
-            Validation.fail(msg)
+            Validate.fail(msg)
         }
         return true
     },
@@ -454,7 +452,6 @@ Validation.prototype = {
                 }
             })
         }
-        return self
     },
     remove: function(func, option) {
         var validations = this.validations
@@ -465,7 +462,6 @@ Validation.prototype = {
             }
         })
         this.validations = victimless
-        return this
     },
     deferValidation: function(e) {
         var self = this

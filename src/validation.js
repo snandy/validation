@@ -162,7 +162,6 @@ Validation.prototype = {
                 }
             })
         }
-        return self
     },
     remove: function(func, option) {
         var validations = this.validations
@@ -173,7 +172,6 @@ Validation.prototype = {
             }
         })
         this.validations = victimless
-        return this
     },
     deferValidation: function(e) {
         var self = this
