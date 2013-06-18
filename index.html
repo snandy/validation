@@ -4,11 +4,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
 		<title>Validation by snandy</title>
-
 		<link rel="stylesheet" href="stylesheets/styles.css">
 		<link rel="stylesheet" href="stylesheets/pygment_trac.css">
 		<script src="javascripts/scale.fix.js"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<script src="javascripts/validation.js"></script>
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -36,7 +35,7 @@
 				</ul>
 			</header>
 			<section>
-				<h3>欢迎使用 Validation.js</h3>
+				<h2>欢迎使用 Validation.js</h2>
 				<p>
 					你将看到 Validation.js 是如何运行的，以及让这一切起作用的程序代码，我用这些作为例子来显示它的功能，也可以作为你入门的向导。
 				</p>
@@ -44,45 +43,89 @@
 					<strong>重要提示</strong> - 正如你知道的，仅依赖客户端校验的做法是很不明智的。应该始终在Server端也做适当的校验。这个JS库的目的，包括我们通常的JavaScript校验，并不能替代Server端的校验， 只是让用户在填表单时减少一些挫折，帮他们节省时间。
 				</p>
 				
-				<h3>导航</h3>
+				<h2>导航</h2>
 				<ul>
-					<li><a name="">存在性校验</a></li>
-					<li><a name="">数字校验</a></li>
-					<li><a name="">长度校验</a></li>
-					<li><a name="">包含性校验</a></li>
-					<li><a name="">排它性校验</a></li>
-					<li><a name="">格式校验</a></li>
-					<li><a name="">确认校验</a></li>
-					<li><a name="">E-Mail校验</a></li>
-					<li><a name="">组合校验</a></li>
-					<li><a name="">表单校验</a></li>
+					<li><a href="#example_presence">存在性校验</a></li>
+					<li><a href="#example_numericality">数字校验</a></li>
+					<li><a href="#example_size">长度校验</a></li>
+					<li><a href="#example_presence">包含性校验</a></li>
+					<li><a href="#example_presence">排它性校验</a></li>
+					<li><a href="#example_presence">格式校验</a></li>
+					<li><a href="#example_presence">确认校验</a></li>
+					<li><a href="#example_presence">E-Mail校验</a></li>
+					<li><a href="#example_presence">中文校验</a></li>
+					<li><a href="#example_presence">组合校验</a></li>
+					<li><a href="#example_presence">表单校验</a></li>
 				</ul>
-				<h3><a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
+				
+				<h2 id="example_presence">存在性校验</h2>
 				<p>
-					We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.
+					必填项：<input type="text" id="zv1">
 				</p>
-
-				<h3><a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
+				<p>只需两行代码</p>
+<code><pre>
+var obj1 = new Validation('zv1')
+obj1.add('presence')
+</pre></code>
+                <p>正如你看到的，new的第一个参数是输入域的id，也可以是DOM元素自身。如果页面中引入了jQuery，它还可以是CSS Selector。
+                    obj1.add方法的第一个参数是输入域需要采用的验证规则，这里的“presence”表示必填。此外还有 “numericality”(数字验证)、“size”(长度验证)等。后面会介绍。
+                </p>
+                <p>亦可一行代码，Validation有个静态方法add可以很方便的添加一些基本验证，不需要复杂的设置</p>
+<code><pre>
+Validation.add('zv1', 'presence')
+</pre></code>
+                <p>
+                                        不想使用默认提示语怎么办？ <br>
+                                        可直接在HTML里修改即可，给INPUT添加 <em>data-validate-succ</em> 或 <em>data-validate-err</em>
+                </p>
+<code><pre>
+&lt;input type=&quot;text&quot; data-validate-succ=&quot;修改了正确提示语&quot; data-validate-err=&quot;修改了错误提示语&quot;&#x2F;&gt;
+</pre></code>
+                <br/>
+				<h2 id="example_numericality">数字验证</h2>
+				<p>数字：<input id="zv2" type="text"/></p>
+<code><pre>
+Validation.add('zv2', 'numericality')
+</pre></code>
+                <p>整数：<input id="zv3" type="text"/></p>
+<code><pre>
+var zv3Obj = new Validation('zv3')
+zv3Obj.add('numericality', {onlyInteger: true})
+</pre></code>
+                <p>特定数字，比如 5：<input id="zv4" type="text"/></p>
+<code><pre>
+var zv4Obj = new Validation('zv4')
+zv4Obj.add('numericality', {is: 5})
+</pre></code>
+                <p>最小约束，比如只能输入 5 以上的数字：<input id="zv5" type="text"/></p>
+<code><pre>
+var zv5Obj = new Validation('zv5')
+zv5Obj.add('numericality', {min: 5})
+</pre></code>
+                <p>最大约束，比如只能输入 5 以下的数字：<input id="zv6" type="text"/></p>
+<code><pre>
+var zv6Obj = new Validation('zv6')
+zv6Obj.add('numericality', {max: 5})
+</pre></code>
+                <p>范围约束，比如只能输入 2-5 以内的数字：<input id="zv7" type="text"/></p>
+<code><pre>
+var zv7Obj = new Validation('zv7')
+zv7Obj.add('numericality', {min: 2, max: 5})
+</pre></code>
+                <p>组合约束，比如只能输入 2-5 以内的整数：<input id="zv8" type="text"/></p>
+<code><pre>
+var zv8Obj = new Validation('zv8')
+zv8Obj.add('numericality', {min: 2, max: 5, onlyInteger: true})
+</pre></code>
+                <br/>
+				<h2 id="example_size">长度校验</h2>
 				<p>
-					If you prefer to not use the automatic generator, push a branch named <code>
-						gh-pages</code>
-					to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
 				</p>
-
-				<h3><a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
+                
+                <br/>
+				<h2 id="">包含性校验</h2>
 				<p>
-					You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>
-						&lt;a&gt;</code>
-					element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.
-				</p>
 
-				<h3><a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-				<p>
-					Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.
 				</p>
 			</section>
 		</div>
@@ -96,4 +139,5 @@
 		</footer>
 		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
 	</body>
+	<script src="javascripts/test.js"></script>
 </html>
