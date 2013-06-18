@@ -55,7 +55,10 @@ var zv20Obj = new Validation('zv20')
 zv20Obj.add('presence')
 zv20Obj.add('chinese')
 
-
+var zv21Obj = new Validation('zv21')
+zv21Obj.add('presence')
+zv21Obj.add('chinese')
+zv21Obj.add('size', {min: 4, max: 10})
 
 
 

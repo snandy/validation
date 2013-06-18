@@ -194,7 +194,17 @@ zv20Obj.add('chinese')
 <code><pre>
 zv20Obj.add('presence chinese')
 </pre></code>
-
+                <p>或者简写为一行，各个规则以空格间隔</p>
+<code><pre>
+zv20Obj.add('presence chinese')
+</pre></code>
+                <p>请输入中文，长度为4-10，必填：<input id="zv21" type="text"/></p>
+<code><pre>
+var zv21Obj = new Validation('zv21')
+zv21Obj.add('presence')
+zv21Obj.add('chinese')
+zv21Obj.add('size', {min: 4, max: 10})
+</pre></code>
 
 			</section>
 		</div>
