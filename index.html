@@ -48,13 +48,13 @@
 					<li><a href="#example_presence">存在性校验</a></li>
 					<li><a href="#example_numericality">数字校验</a></li>
 					<li><a href="#example_size">长度校验</a></li>
-					<li><a href="#example_presence">包含性校验</a></li>
-					<li><a href="#example_presence">排它性校验</a></li>
-					<li><a href="#example_presence">格式校验</a></li>
-					<li><a href="#example_presence">确认校验</a></li>
-					<li><a href="#example_presence">E-Mail校验</a></li>
+					<li><a href="#example_inclusion">包含性校验</a></li>
+					<li><a href="#example_exclusion">排它性校验</a></li>
+					<li><a href="#example_format">格式校验</a></li>
+					<li><a href="#example_email">E-Mail校验</a></li>
 					<li><a href="#example_presence">中文校验</a></li>
 					<li><a href="#example_presence">组合校验</a></li>
+					<li><a href="#example_presence">确认校验</a></li>
 					<li><a href="#example_presence">表单校验</a></li>
 				</ul>
 				
@@ -119,14 +119,71 @@ zv8Obj.add('numericality', {min: 2, max: 5, onlyInteger: true})
 </pre></code>
                 <br/>
 				<h2 id="example_size">长度校验</h2>
-				<p>
-				</p>
-                
+				<p>特定长度，比如只能输入4个字符：<input id="zv9" type="text"/></p>
+<code><pre>
+var zv9Obj = new Validation('zv9')
+zv9Obj.add('size', {is: 4})
+</pre></code>
+                <p>低限约束，比如至少要输入4个字符：<input id="zv10" type="text"/></p>
+<code><pre>
+var zv10Obj = new Validation('zv10')
+zv10Obj.add('size', {min: 4})
+</pre></code>
+                <p>高限约束，比如最多只能输入4个字符：<input id="zv11" type="text"/></p>
+<code><pre>
+var zv11Obj = new Validation('zv11')
+zv11Obj.add('size', {max: 4})
+</pre></code>
+                <p>范围约束，比如只能输入4-10个字符：<input id="zv12" type="text"/></p>
+<code><pre>
+var zv12Obj = new Validation('zv12')
+zv12Obj.add('size', {min: 4, max: 10})
+</pre></code>
                 <br/>
-				<h2 id="">包含性校验</h2>
-				<p>
+				<h2 id="example_inclusion">包含性校验</h2>
+				<p>精确匹配，比如只能输入(apple, banana, orange)：<input id="zv13" type="text"/></p>
+<code><pre>
+var zv13Obj = new Validation('zv13')
+zv13Obj.add('inclusion', {within: [ 'apple' , 'banana', 'orange' ]})
+</pre></code>
+                <p>模糊匹配，还拿(apple, banana, orange)示例，这里只要包含指定的元素即可：<input id="zv14" type="text"/></p>
+<code><pre>
+var zv14Obj = new Validation('zv14')
+zv14Obj.add('inclusion', {within: [ 'apple' , 'banana', 'orange' ], partialMatch: true})
+</pre></code>
+				<br/>
+                <h2 id="example_exclusion">排它性校验</h2>
+                <p>精确匹配，不能输入(apple, banana, orange)：<input id="zv15" type="text"/></p>
+<code><pre>
+var zv15Obj = new Validation('zv15')
+zv15Obj.add('exclusion', {within: [ 'apple' , 'banana', 'orange' ]})
+</pre></code>
+                <p>模糊匹配，仍然用(apple, banana, orange)示例：<input id="zv16" type="text"/></p>
+<code><pre>
+var zv16Obj = new Validation('zv16')
+zv16Obj.add('exclusion', {within: [ 'apple' , 'banana', 'orange' ], partialMatch: true})
+</pre></code>
+                <br/>
+                <h2 id="example_format">格式校验</h2>
+                <p>输入包含 “love” 的单词，不取分大小写：<input id="zv17" type="text"/></p>
+<code><pre>
+var zv17Obj = new Validation('zv17')
+zv17Obj.add('format', { pattern: /love/i })
+</pre></code>
+                <br/>
+                <h2 id="example_email">email校验</h2>
+                <p>输入您的电子邮箱：<input id="zv18" type="text"/></p>
+<code><pre>
+Validation.add('zv18', 'email')
+</pre></code>
 
-				</p>
+                <br/>
+                <h2 id="example_chinese">中文校验</h2>
+                <p>请输入中文：<input id="zv19" type="text"/></p>
+<code><pre>
+Validation.add('zv19', 'chinese')
+</pre></code>
+
 			</section>
 		</div>
 		<footer>

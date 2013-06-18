@@ -20,7 +20,7 @@ body {
 .wrapper {
   width: 710px;
   margin: 0 auto;
-  background: #DEDEDE;
+  background: #fffff; /*#DEDEDE*/
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -ms-border-radius: 8px;
@@ -240,8 +240,8 @@ code, pre {
 
 pre {
   padding: 10px;
-  background: #3A3C42;
-  color: #f8f8f2;
+  background: #f8f8f2;
+  color: black;
 }
 pre code {
   color: #f8f8f2;

@@ -19,3 +19,49 @@ zv7Obj.add('numericality', {min: 2, max: 5})
 
 var zv8Obj = new Validation('zv8')
 zv8Obj.add('numericality', {min: 2, max: 5, onlyInteger: true})
+
+var zv9Obj = new Validation('zv9')
+zv9Obj.add('size', {is: 4})
+
+var zv10Obj = new Validation('zv10')
+zv10Obj.add('size', {min: 4})
+
+var zv11Obj = new Validation('zv11')
+zv11Obj.add('size', {max: 4})
+
+var zv12Obj = new Validation('zv12')
+zv12Obj.add('size', {min: 4, max: 10})
+
+var zv13Obj = new Validation('zv13')
+zv13Obj.add('inclusion', {within: [ 'apple' , 'banana', 'orange' ]})
+
+var zv14Obj = new Validation('zv14')
+zv14Obj.add('inclusion', {within: [ 'apple' , 'banana', 'orange' ], partialMatch: true})
+
+var zv15Obj = new Validation('zv15')
+zv15Obj.add('exclusion', {within: [ 'apple' , 'banana', 'orange' ]})
+
+var zv16Obj = new Validation('zv16')
+zv16Obj.add('exclusion', {within: [ 'apple' , 'banana', 'orange' ], partialMatch: true})
+
+var zv17Obj = new Validation('zv17')
+zv17Obj.add('format', { pattern: /love/i })
+
+Validation.add('zv18', 'email')
+
+Validation.add('zv19', 'chinese')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
