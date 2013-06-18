@@ -156,10 +156,10 @@ Validation.prototype = {
         }
         if ( Util.isString(op) ) {
             forEach(op.split(' '), function(n, i) {
-                self.validations[i] = {
+                self.validations.push({
                     validateFunc: Validate[n],
                     params: option
-                }
+                })
             })
         }
     },

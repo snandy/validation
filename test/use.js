@@ -60,4 +60,9 @@ lv19.add( 'confirmation', { match: 'myPassword' } );
 var lv20 = new Validation('lv20');
 lv20.add( 'email' );
 
-Validation.add('lv21', 'chinese')
+// Validation.add('lv21', 'presence')
+// Validation.add('lv21', 'chinese')
+
+var zv20Obj = new Validation('lv21')
+zv20Obj.add('presence')
+zv20Obj.add('chinese')
