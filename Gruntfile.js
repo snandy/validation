@@ -16,6 +16,7 @@ module.exports = function(grunt) {
 		var str = '/*!\n';
 		str += ' * <%= pkg.name %>.js v<%= pkg.version %>\n';
 		str += ' * <%= pkg.repository.url %>\n';
+		str += ' * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)\n';
 		str += ' * <%= pkg.author %> <%= grunt.template.today("yyyy-mm-dd") %> ' + time + '\n';
 		str += ' *\n'
 		str += ' */\n';
@@ -36,14 +37,14 @@ module.exports = function(grunt) {
 				banner: banner
 			},
 			// 核心版
-			core: {
+			standalone: {
 				// intro在首部，outro在尾部
-				src: ['src/intro.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
-				dest: 'validation.src.js'
+				src: ['src/intro.js', 'src/selector.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
+				dest: 'validation.standalone.src.js'
 			},
 			// 自动执行版
-			auto: {
-				src: ['src/intro.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js', 'src/selector.js'],
+			withjq: {
+				src: ['src/intro.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
 				dest: 'validation.auto.src.js'
 			}
 		},
@@ -51,11 +52,11 @@ module.exports = function(grunt) {
 			options: {
 				banner: banner
 			},
-			core: {
-				src: ['validation.src.js'],
-				dest: 'validation.js'
+			standalone: {
+				src: ['validation.standalone.src.js'],
+				dest: 'validation.standalone.js'
 			},
-			auto: {
+			withjq: {
 				src: ['validation.auto.src.js'],
 				dest: 'validation.auto.js'
 			}

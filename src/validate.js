@@ -230,6 +230,21 @@ var Validate = {
         }
         return true
     },
+    /**
+     * 自定义验证规则
+     * @param {Object} val
+     * @param {Object} option
+     */
+    custom: function(val, option) {
+        var option = option || {}
+        var against = option.against || function(){ return true }
+        var args = option.args || {}
+        var message = option.failureMsg || 'Not valid!'
+        if (!against(val, args)) {
+            Validate.fail(message)
+        }
+        return true
+    },
     fail: function(errorMsg) {
         throw new ZVError(errorMsg)
     }
