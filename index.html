@@ -60,15 +60,15 @@
 				</p>
 				<p>只需两行代码</p>
 <code><pre>
-var obj1 = new Validation('zv1')
+var obj1 = new Validation('#zv1')
 obj1.add('presence')
 </pre></code>
-                <p>正如你看到的，new的第一个参数是输入域的id，也可以是DOM元素自身。如果页面中引入了jQuery，它还可以是<a href="jquery" target="_blank">CSS Selector</a>。
+                <p>正如你看到的，new的第一个参数是输入域的CSS Selector，也可以是DOM元素自身。独立版仅支持四类选择器：ID、Class、Tag、Attribute，jQuery版则支持所有CSS选择器。<br/>
                     obj1.add方法的第一个参数是输入域需要采用的验证规则，这里的“presence”表示必填。此外还有 “numericality”(数字验证)、“size”(长度验证)等。后面会介绍。
                 </p>
                 <p>亦可一行代码，Validation有个静态方法add可以很方便的添加一些基本验证，不需要复杂的设置</p>
 <code><pre>
-Validation.add('zv1', 'presence')
+Validation.add('#zv1', 'presence')
 </pre></code>
                 <p>
                                         不想使用默认提示语怎么办？ <br>
@@ -81,110 +81,110 @@ Validation.add('zv1', 'presence')
 				<h2 id="example_numericality">数字验证</h2>
 				<p>数字：<input id="zv2" type="text"/></p>
 <code><pre>
-Validation.add('zv2', 'numericality')
+Validation.add('#zv2', 'numericality')
 </pre></code>
                 <p>整数：<input id="zv3" type="text"/></p>
 <code><pre>
-var zv3Obj = new Validation('zv3')
+var zv3Obj = new Validation('#zv3')
 zv3Obj.add('numericality', {onlyInteger: true})
 </pre></code>
                 <p>特定数字，比如 5：<input id="zv4" type="text"/></p>
 <code><pre>
-var zv4Obj = new Validation('zv4')
+var zv4Obj = new Validation('#zv4')
 zv4Obj.add('numericality', {is: 5})
 </pre></code>
                 <p>最小约束，比如只能输入 5 以上的数字：<input id="zv5" type="text"/></p>
 <code><pre>
-var zv5Obj = new Validation('zv5')
+var zv5Obj = new Validation('#zv5')
 zv5Obj.add('numericality', {min: 5})
 </pre></code>
                 <p>最大约束，比如只能输入 5 以下的数字：<input id="zv6" type="text"/></p>
 <code><pre>
-var zv6Obj = new Validation('zv6')
+var zv6Obj = new Validation('#zv6')
 zv6Obj.add('numericality', {max: 5})
 </pre></code>
                 <p>范围约束，比如只能输入 2-5 以内的数字：<input id="zv7" type="text"/></p>
 <code><pre>
-var zv7Obj = new Validation('zv7')
+var zv7Obj = new Validation('#zv7')
 zv7Obj.add('numericality', {min: 2, max: 5})
 </pre></code>
                 <p>组合约束，比如只能输入 2-5 以内的整数：<input id="zv8" type="text"/></p>
 <code><pre>
-var zv8Obj = new Validation('zv8')
+var zv8Obj = new Validation('#zv8')
 zv8Obj.add('numericality', {min: 2, max: 5, onlyInteger: true})
 </pre></code>
                 <br/>
 				<h2 id="example_size">长度校验</h2>
 				<p>特定长度，比如只能输入4个字符：<input id="zv9" type="text"/></p>
 <code><pre>
-var zv9Obj = new Validation('zv9')
+var zv9Obj = new Validation('#zv9')
 zv9Obj.add('size', {is: 4})
 </pre></code>
                 <p>低限约束，比如至少要输入4个字符：<input id="zv10" type="text"/></p>
 <code><pre>
-var zv10Obj = new Validation('zv10')
+var zv10Obj = new Validation('#zv10')
 zv10Obj.add('size', {min: 4})
 </pre></code>
                 <p>高限约束，比如最多只能输入4个字符：<input id="zv11" type="text"/></p>
 <code><pre>
-var zv11Obj = new Validation('zv11')
+var zv11Obj = new Validation('#zv11')
 zv11Obj.add('size', {max: 4})
 </pre></code>
                 <p>范围约束，比如只能输入4-10个字符：<input id="zv12" type="text"/></p>
 <code><pre>
-var zv12Obj = new Validation('zv12')
+var zv12Obj = new Validation('#zv12')
 zv12Obj.add('size', {min: 4, max: 10})
 </pre></code>
                 <br/>
 				<h2 id="example_inclusion">包含性校验</h2>
 				<p>精确匹配，比如只能输入(apple, banana, orange)：<input id="zv13" type="text"/></p>
 <code><pre>
-var zv13Obj = new Validation('zv13')
+var zv13Obj = new Validation('#zv13')
 zv13Obj.add('inclusion', {within: [ 'apple' , 'banana', 'orange' ]})
 </pre></code>
                 <p>模糊匹配，还拿(apple, banana, orange)示例，这里只要包含指定的元素即可：<input id="zv14" type="text"/></p>
 <code><pre>
-var zv14Obj = new Validation('zv14')
+var zv14Obj = new Validation('#zv14')
 zv14Obj.add('inclusion', {within: [ 'apple' , 'banana', 'orange' ], partialMatch: true})
 </pre></code>
 				<br/>
                 <h2 id="example_exclusion">排它性校验</h2>
                 <p>精确匹配，不能输入(apple, banana, orange)：<input id="zv15" type="text"/></p>
 <code><pre>
-var zv15Obj = new Validation('zv15')
+var zv15Obj = new Validation('#zv15')
 zv15Obj.add('exclusion', {within: [ 'apple' , 'banana', 'orange' ]})
 </pre></code>
                 <p>模糊匹配，仍然用(apple, banana, orange)示例：<input id="zv16" type="text"/></p>
 <code><pre>
-var zv16Obj = new Validation('zv16')
+var zv16Obj = new Validation('#zv16')
 zv16Obj.add('exclusion', {within: [ 'apple' , 'banana', 'orange' ], partialMatch: true})
 </pre></code>
                 <br/>
                 <h2 id="example_format">格式校验</h2>
                 <p>输入包含 “love” 的单词，不取分大小写：<input id="zv17" type="text"/></p>
 <code><pre>
-var zv17Obj = new Validation('zv17')
+var zv17Obj = new Validation('#zv17')
 zv17Obj.add('format', { pattern: /love/i })
 </pre></code>
                 <br/>
                 <h2 id="example_email">email校验</h2>
                 <p>输入您的电子邮箱：<input id="zv18" type="text"/></p>
 <code><pre>
-Validation.add('zv18', 'email')
+Validation.add('#zv18', 'email')
 </pre></code>
 
                 <br/>
                 <h2 id="example_chinese">中文校验</h2>
                 <p>请输入中文：<input id="zv19" type="text"/></p>
 <code><pre>
-Validation.add('zv19', 'chinese')
+Validation.add('#zv19', 'chinese')
 </pre></code>
 
                 <br/>
                 <h2 id="example_combination">组合校验</h2>
                 <p>请输入中文，且必填：<input id="zv20" type="text"/></p>
 <code><pre>
-var zv20Obj = new Validation('zv20')
+var zv20Obj = new Validation('#zv20')
 zv20Obj.add('presence')
 zv20Obj.add('chinese')
 </pre></code>
@@ -198,7 +198,7 @@ zv20Obj.add('presence chinese')
 </pre></code>
                 <p>请输入中文，长度为4-10，必填：<input id="zv21" type="text"/></p>
 <code><pre>
-var zv21Obj = new Validation('zv21')
+var zv21Obj = new Validation('#zv21')
 zv21Obj.add('presence')
 zv21Obj.add('chinese')
 zv21Obj.add('size', {min: 4, max: 10})
@@ -208,7 +208,7 @@ zv21Obj.add('size', {min: 4, max: 10})
                 <h2 id="example_accept">认可校验</h2>
                 <p>请勾选：<input id="zv22" type="checkbox" style="width:10px"/></p>
 <code><pre>
-Validation.add('zv22', 'acceptance')
+Validation.add('#zv22', 'acceptance')
 </pre></code>
 
 			</section>
