@@ -42,10 +42,10 @@ module.exports = function(grunt) {
 				src: ['src/intro.js', 'src/selector.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
 				dest: 'validation.standalone.src.js'
 			},
-			// 自动执行版
-			withjq: {
+			// jquery
+			jquery: {
 				src: ['src/intro.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
-				dest: 'validation.auto.src.js'
+				dest: 'validation.jquery.src.js'
 			}
 		},
 		uglify: {
@@ -56,9 +56,9 @@ module.exports = function(grunt) {
 				src: ['validation.standalone.src.js'],
 				dest: 'validation.standalone.js'
 			},
-			withjq: {
-				src: ['validation.auto.src.js'],
-				dest: 'validation.auto.js'
+			jquery: {
+				src: ['validation.jquery.src.js'],
+				dest: 'validation.jquery.js'
 			}
 		}
 	});
