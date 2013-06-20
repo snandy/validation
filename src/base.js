@@ -13,8 +13,12 @@ function noop() {}
 
 // If the jQuery exists, use it
 function $(selector) {
-    return win.jQuery ? win.jQuery(selector)[0] : query(selector)[0]
+    return win.jQuery ? win.jQuery(selector) : query(selector)
 }
+function single(selector) {
+    return $(selector)[0]
+}
+Util.$ = $
 
 // Error class
 function ZVError(errorMsg) {

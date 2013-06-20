@@ -24,15 +24,32 @@
  */
 function Validation(elem, option) {
     if (!elem) return
-    this.element = elem.nodeName ? elem : $(elem)
+    this.element = elem.nodeName ? elem : single(elem)
     if (!this.element) throw new Error('element is not exits')
     this.initialize(option)
 }
-
+/**
+ * convenience method to add validation 
+ * @param {Object} elem
+ * @param {Object} validate
+ * @param {Object} instanceOption
+ * @param {Object} validateOption
+ */
 Validation.add = function(elem, validate, instanceOption, validateOption) {
     var vObj = new Validation(elem, instanceOption)
     vObj.add(validate, validateOption)
     return vObj
+}
+/**
+ * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
+ * @param {DOM Element} container
+ */
+Validation.init = function(container) {
+	var elems = $('[data-validate]', container)
+	Util.forEach(elems, function(elem) {
+		var vali = new Validation(elem)
+		vali.add(elem.getAttribute('data-validate'))
+	})
 }
 
 Validation.prototype = {
@@ -52,7 +69,7 @@ Validation.prototype = {
         this.validMsg = option.validMsg || 
                 element.getAttribute('data-validate-succ') || '填写正确'
         var node = option.insertAfterWhatNode || element
-        this.insertAfterWhatNode = node.nodeType ? node : $(node)
+        this.insertAfterWhatNode = node.nodeType ? node : single(node)
         this.onlyOnBlur = option.onlyOnBlur || false
         this.wait = option.wait || 0
         this.onlyOnSubmit = option.onlyOnSubmit || false

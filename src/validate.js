@@ -214,7 +214,7 @@ var Validate = {
         }
         var option = option || {}
         var message = option.failureMsg || '两次输入不一致!'
-        var match = option.match.nodeName ? option.match : $(option.match)
+        var match = option.match.nodeName ? option.match : single(option.match)
         if (!match) {
             throw new Error('There is no reference with name of, or element with id of ' + option.match)
         }

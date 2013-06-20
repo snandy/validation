@@ -39,12 +39,12 @@ module.exports = function(grunt) {
 			// 核心版
 			standalone: {
 				// intro在首部，outro在尾部
-				src: ['src/intro.js', 'src/selector.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
+				src: ['src/intro.js', 'src/selector.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/run.js', 'src/outro.js'],
 				dest: 'validation.standalone.src.js'
 			},
 			// jquery
 			jquery: {
-				src: ['src/intro.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/outro.js'],
+				src: ['src/intro.js', 'src/base.js', 'src/validate.js', 'src/validation.js', 'src/validationForm.js', 'src/run.js', 'src/outro.js'],
 				dest: 'validation.jquery.src.js'
 			}
 		},

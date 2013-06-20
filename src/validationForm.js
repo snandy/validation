@@ -13,7 +13,7 @@ function ValidationForm(elem) {
 }
 ValidationForm.getInstance = function(elem) {
     if (!elem) return
-    var el = elem.nodeName ? elem : $(elem)
+    var el = elem.nodeName ? elem : single(elem)
     if (!el.id) {
         el.id = 'formId_' + uuid++
     }
