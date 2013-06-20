@@ -1,5 +1,5 @@
 
-Validation.add('#zv1', 'numericality')
+Validation.add('#zv1', 'presence')
 Validation.add('#zv2', 'numericality')
 
 var zv3Obj = new Validation('#zv3')
