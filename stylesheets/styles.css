@@ -359,6 +359,11 @@ input {
     padding: 2px;
     border: 1px solid #aaaaaa;
 }
+.sels {
+  font-weight: bold;
+  color: #61778B;
+  font-style: italic;
+}
 /* For Validation */
 .ZV_validation_msg{
     font-weight:bold;

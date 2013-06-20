@@ -41,10 +41,11 @@
 				<h2>使用</h2>
                 <p>Validation.js有两个版本，独立版不依赖于任何库，页面中只需引入Validation.standalone.js。如果页面中使用了jQuery，那么可以使用Validation.jquery.js</p>
 <code><pre>
-&lt;script src=&quot;http:&#x2F;&#x2F;snandy.github.io&#x2F;validation&#x2F;javascripts&#x2F;validation.standalone.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;script src=&quot;validation.standalone.js&quot;&gt;&lt;&#x2F;script&gt;
 </pre></code>
+或
 <code><pre>
-&lt;script src=&quot;http:&#x2F;&#x2F;snandy.github.io&#x2F;validation&#x2F;javascripts&#x2F;validation.jquery.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;script src=&quot;validation.jquery.js&quot;&gt;&lt;&#x2F;script&gt;
 </pre></code>
                 <br/>
 				<h2>导航</h2>
@@ -72,17 +73,16 @@
 var obj1 = new Validation('#zv1')
 obj1.add('presence')
 </pre></code>
-                <p>正如你看到的，new的第一个参数是输入域的CSS Selector，也可以是DOM元素自身。独立版仅支持四类选择器：ID、Class、Tag、Attribute，jQuery版则支持所有CSS选择器。<br/>
-                    obj1.add方法的第一个参数是输入域需要采用的验证规则，这里的“presence”表示必填。此外还有 “numericality”(数字验证)、“size”(长度验证)等。后面会介绍。
+                <p>正如你看到的，new的第一个参数是输入域的CSS Selector，也可以是DOM元素自身。</p>
+                <p>独立版仅支持四类选择器：<span class="sels">ID、Class、Tag、Attribute</span>，jQuery版则支持所有CSS选择器。</p>
+                <p>obj1.add方法的第一个参数是输入域需要采用的验证规则，这里的“presence”表示必填。此外还有 “numericality”(数字验证)、“size”(长度验证)等。后面会介绍。
                 </p>
                 <p>亦可一行代码，Validation有个静态方法add可以很方便的添加一些基本验证，不需要复杂的设置</p>
 <code><pre>
 Validation.add('#zv1', 'presence')
 </pre></code>
-                <p>
-                                        不想使用默认提示语怎么办？ <br>
-                                        可直接在HTML里修改即可，给INPUT添加 <em>data-validate-succ</em> 或 <em>data-validate-err</em>
-                </p>
+                <p>不想使用默认提示语怎么办？</p>
+                <p>可直接在HTML里修改即可，给INPUT添加 <em>data-validate-succ</em> 或 <em>data-validate-err</em></p>
 <code><pre>
 &lt;input type=&quot;text&quot; data-validate-succ=&quot;修改了正确提示语&quot; data-validate-err=&quot;修改了错误提示语&quot;&#x2F;&gt;
 </pre></code>
