@@ -63,6 +63,8 @@ zv21Obj.add('size', {min: 4, max: 10})
 Validation.add('#zv22', 'acceptance')
 
 
+var zv23Obj = new Validation('#zv23')
+zv23Obj.add('confirmation', {match: '#pwd'})
 
 
 

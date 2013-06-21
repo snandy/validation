@@ -58,8 +58,9 @@
 					<li><a href="#example_format">格式校验</a></li>
 					<li><a href="#example_email">E-Mail校验</a></li>
 					<li><a href="#example_chinese">中文校验</a></li>
-					<li><a href="#example_combination">组合校验</a></li>
 					<li><a href="#example_accept">认可校验</a></li>
+                    <li><a href="#example_conform">确认校验</a></li>
+                    <li><a href="#example_combination">组合校验</a></li>
 					<li><a target="_blank" href="form.html">表单校验</a></li>
 					<li><a target="_blank" href="jquery.html">和jQuery一起</a></li>
 				</ul>
@@ -190,6 +191,22 @@ Validation.add('#zv19', 'chinese')
 </pre></code>
 
                 <br/>
+                <h2 id="example_accept">认可校验</h2>
+                <p>请勾选：<input id="zv22" type="checkbox" style="width:10px"/></p>
+<code><pre>
+Validation.add('#zv22', 'acceptance')
+</pre></code>
+
+                <br/>
+                <h2 id="example_conform">确认校验</h2>
+                <p>登陆密码：<input id="pwd" type="password"/></p>
+                <p>确认密码：<input id="zv23" type="password" data-validate-err="两次输入的密码不一致"/></p>
+<code><pre>
+var zv23Obj = new Validation('#zv23')
+zv23Obj.add('confirmation', {match: '#pwd'})
+</pre></code>
+
+                <br/>
                 <h2 id="example_combination">组合校验</h2>
                 <p>请输入中文，且必填：<input id="zv20" type="text"/></p>
 <code><pre>
@@ -212,14 +229,6 @@ zv21Obj.add('presence')
 zv21Obj.add('chinese')
 zv21Obj.add('size', {min: 4, max: 10})
 </pre></code>
-
-                <br/>
-                <h2 id="example_accept">认可校验</h2>
-                <p>请勾选：<input id="zv22" type="checkbox" style="width:10px"/></p>
-<code><pre>
-Validation.add('#zv22', 'acceptance')
-</pre></code>
-
 			</section>
 		</div>
 		<footer>
