@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="chrome=1">
-		<title>Validation by snandy</title>
+		<title>Validation.js by snandy</title>
 		<link rel="stylesheet" href="stylesheets/styles.css">
 		<link rel="stylesheet" href="stylesheets/pygment_trac.css">
 		<script src="javascripts/scale.fix.js"></script>
@@ -39,7 +39,7 @@
 				</p>
 
 				<h2>使用</h2>
-                <p>Validation.js有两个版本，独立版不依赖于任何库，页面中只需引入Validation.standalone.js。如果页面中使用了jQuery，那么可以使用Validation.jquery.js</p>
+                <p>Validation.js有两个版本，独立版不依赖于任何库，页面中只需引入 Validation.standalone.js。如果页面中使用了jQuery，那么可以使用 Validation.jquery.js</p>
 <code><pre>
 &lt;script src=&quot;validation.standalone.js&quot;&gt;&lt;&#x2F;script&gt;
 </pre></code>
@@ -47,6 +47,11 @@
 <code><pre>
 &lt;script src=&quot;validation.jquery.js&quot;&gt;&lt;&#x2F;script&gt;
 </pre></code>
+                <p>如果想让验证自动运行，只需给script添加 data-run="true"。它会自动查找页面中具有data-validate属性的DOM元素，自行完成验证的初始化工作。不用写一行JS代码，而只需要配置好验证通过和未通过时的CSS样式。</p>
+<code><pre>
+&lt;script src=&quot;validation.standalone.js&quot; data-run=&quot;true&quot;&gt;&lt;&#x2F;script&gt;
+</pre></code>
+
                 <br/>
 				<h2>导航</h2>
 				<ul>
