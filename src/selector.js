@@ -43,9 +43,9 @@ var query = function(win, doc, undefined) {
     
     // selector regular expression
     var rId = /^#[\w\-]+/
-    var    rTag = /^([\w\*]+)$/
-    var    rCls = /^([\w\-]+)?\.([\w\-]+)/
-    var    rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
+    var rTag = /^([\w\*]+)$/
+    var rCls = /^([\w\-]+)?\.([\w\-]+)/
+    var rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
     
     // For IE9/Firefox/Safari/Chrome/Opera
     var makeArray = function(obj) {

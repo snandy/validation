@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2013-06-20 18:42:35
+ * @snandy 2013-06-26 23:26:27
  *
  */
 ~function(win, doc, undefined) {
