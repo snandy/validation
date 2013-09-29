@@ -208,6 +208,26 @@ var Validate = {
         }
         return true
     },
+    /**
+     * 手机号校验
+     * @param {Object} val
+     * @param {Object} option
+     *      failureMsg {String} 错误提示
+     */    
+    mobile: function(val, option) {
+        var option = option || {}
+        var msg = option.failureMsg || '请输入正确的手机号!'
+
+        // 必须为11位
+        var leng = val.length === 11
+
+        // 验证正则
+        var reg = /^1(?:[38]\d|4[57]|5[01256789])\d{8}$/
+        if (!reg.test(val)) {
+            Validate.fail(msg)
+        }
+        return true
+    },
     confirmation: function(val, option) {
         if (!option.match) {
             throw new Error('Error validating confirmation: Id of element to match must be provided')
