@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2013-06-20 12:31:19
+ * @snandy 2013-12-04 11:05:53
  *
  */
 ~function(win, doc, undefined) {
@@ -42,145 +42,147 @@ forEach(['Array', 'Boolean', 'Function', 'Object', 'String', 'Number'], function
  * @param {Object} context
  * 
  * 1, 通过id获取,该元素是唯一的
- *	   $('#id')
+ *       $('#id')
  * 
  * 2, 通过className获取
- *	$('.cls') 获取文档中所有className为cls的元素
- *	$('.cls', el)
- *	$('.cls', '#id')
- *	$('span.cls') 获取文档中所有className为cls的span元素
- *	$('span.cls', el) 获取指定元素中className为cls的元素, el为HTMLElement (不推荐)
- *	$('span.cls', '#id') 获取指定id的元素中className为cls的元素
- *	
+ *    $('.cls') 获取文档中所有className为cls的元素
+ *    $('.cls', el)
+ *    $('.cls', '#id')
+ *    $('span.cls') 获取文档中所有className为cls的span元素
+ *    $('span.cls', el) 获取指定元素中className为cls的元素, el为HTMLElement (不推荐)
+ *    $('span.cls', '#id') 获取指定id的元素中className为cls的元素
+ *    
  * 3, 通过tagName获取
- *	$('span') 获取文档中所有的span元素
- *	$('span', el) 获取指定元素中的span元素, el为HTMLElement (不推荐)
- *	$('span', '#id') 获取指定id的元素中的span元素
+ *    $('span') 获取文档中所有的span元素
+ *    $('span', el) 获取指定元素中的span元素, el为HTMLElement (不推荐)
+ *    $('span', '#id') 获取指定id的元素中的span元素
  * 
  * 4, 通过attribute获取
- *	$('[name]') 获取文档中具有属性name的元素
- *	$('[name]', el)
- *	$('[name]', '#id')
- *	$('[name=uname]') 获取文档中所有属性name=uname的元素
- *	$('[name=uname]', el)
- *	$('[name=uname]', '#id')
- *	$('input[name=uname]') 获取文档中所有属性name=uname的input元素
- *	$('input[name=uname]', el)
- *	$('input[name=uname]', '#id')
+ *    $('[name]') 获取文档中具有属性name的元素
+ *    $('[name]', el)
+ *    $('[name]', '#id')
+ *    $('[name=uname]') 获取文档中所有属性name=uname的元素
+ *    $('[name=uname]', el)
+ *    $('[name=uname]', '#id')
+ *    $('input[name=uname]') 获取文档中所有属性name=uname的input元素
+ *    $('input[name=uname]', el)
+ *    $('input[name=uname]', '#id')
  */
 var query = function(win, doc, undefined) {
-	
-	// Save a reference to core methods
-	var slice = Array.prototype.slice
-	
-	// selector regular expression
-	var rId = /^#[\w\-]+/
-	var	rTag = /^([\w\*]+)$/
-	var	rCls = /^([\w\-]+)?\.([\w\-]+)/
-	var	rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
-	
-	// For IE9/Firefox/Safari/Chrome/Opera
-	var makeArray = function(obj) {
-		return slice.call(obj, 0)
-	}
-	// For IE6/7/8
-	try{
-		slice.call(doc.documentElement.childNodes, 0)[0].nodeType
-	} catch(e) {
-		makeArray = function(obj) {
-			var result = []
-			for (var i = 0, len = obj.length; i < len; i++) {
-				result[i] = obj[i]
-			}
-			return result
-		}
-	}
-	
-	function byId(id) {
-		return doc.getElementById(id)
-	}
-	function check(attr, val, node) {
-		var reg = RegExp('(?:^|\\s+)' + val + '(?:\\s+|$)')
-		var	attribute = attr === 'className' ? 
-				node.className : node.getAttribute(attr)
-		if (attribute) {
-			if (val) {
-				if (reg.test(attribute)) return true
-			} else {
-				return true
-			}
-		}
-		return false
-	}	
-	function filter(all, attr, val) {
-		var el, result = []
-		var	i = 0, r = 0
-		while ( (el = all[i++]) ) {
-			if ( check(attr, val, el) ) {
-				result[r++] = el
-			}
-		}
-		return result
-	}
-		
-	function query(selector, context) {
-		var s = selector, arr = []
-		var context = context === undefined ? doc : typeof context === 'string' ?
-				byId(context.substr(1, context.length)) : context
-		
-		// id 还是用docuemnt.getElementById最快
-		if ( rId.test(s) ) {
-			arr[0] = byId( s.substr(1, s.length) )
-			return arr
-		}
-		// 优先使用querySelector，现代浏览器都实现它了
-		if (context.querySelectorAll) {
-			if (context.nodeType === 1) {
-				var old = context.id, id = context.id = '__ZZ__'
-				try {
-					return context.querySelectorAll('#' + id + ' ' + s)
-				} catch(e){
-					throw new Error('querySelectorAll: ' + e)
-				} finally {
-					old ? context.id = old : context.removeAttribute('id')
-				}
-			}
-			return makeArray(context.querySelectorAll(s))
-		}
-		// className
-		if ( rCls.test(s) ) {
-			var ary = s.split('.')
-			var	tag = ary[0] 
-			var	cls = ary[1]
-			if (context.getElementsByClassName) {
-				var elems = context.getElementsByClassName(cls)
-				if (tag) {
-					for (var i = 0, len = elems.length; i < len; i++) {
-						var el = elems[i]
-						el.tagName.toLowerCase() === tag && arr.push(el)
-					}
-					return arr
-				} else {
-					return makeArray(elems)
-				}
-			} else {
-				var all = context.getElementsByTagName(tag || '*')
-				return filter(all, 'className', cls)
-			}
-		}
-		// Tag name
-		if ( rTag.test(s) ) {
-			return makeArray(context.getElementsByTagName(s))
-		}
-		// Attribute
-		if ( rAttr.test(s) ) {
-			var result = rAttr.exec(s)
-			var all = context.getElementsByTagName(result[1] || '*')
-			return filter(all, result[2], result[4])
-		}
-	}
-	
-	return query
+    
+    // Save a reference to core methods
+    var slice = Array.prototype.slice
+    
+    // selector regular expression
+    var rId = /^#[\w\-]+/
+    var rTag = /^([\w\*]+)$/
+    var rCls = /^([\w\-]+)?\.([\w\-]+)/
+    var rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
+    
+    // For IE9/Firefox/Safari/Chrome/Opera
+    var makeArray = function(obj) {
+        return slice.call(obj, 0)
+    }
+    // For IE6/7/8
+    try{
+        slice.call(doc.documentElement.childNodes, 0)[0].nodeType
+    } catch(e) {
+        makeArray = function(obj) {
+            var result = []
+            for (var i = 0, len = obj.length; i < len; i++) {
+                result[i] = obj[i]
+            }
+            return result
+        }
+    }
+    
+    function byId(id) {
+        return doc.getElementById(id)
+    }
+    function check(attr, val, node) {
+        var reg = RegExp('(?:^|\\s+)' + val + '(?:\\s+|$)')
+        var    attribute = attr === 'className' ? 
+                node.className : node.getAttribute(attr)
+        if (attribute) {
+            if (val) {
+                if (reg.test(attribute)) return true
+            } else {
+                return true
+            }
+        }
+        return false
+    }    
+    function filter(all, attr, val) {
+        var el, result = []
+        var i = 0, r = 0
+        while ( (el = all[i++]) ) {
+            if ( check(attr, val, el) ) {
+                result[r++] = el
+            }
+        }
+        return result
+    }
+        
+    function query(selector, context) {
+        var s = selector, arr = []
+        var context = context === undefined ? doc : typeof context === 'string' ?
+                byId(context.substr(1, context.length)) : context
+        
+        if (!selector) return arr
+        
+        // id 还是用docuemnt.getElementById最快
+        if ( rId.test(s) ) {
+            arr[0] = byId( s.substr(1, s.length) )
+            return arr
+        }
+        // 优先使用querySelector，现代浏览器都实现它了
+        if (context.querySelectorAll) {
+            if (context.nodeType === 1) {
+                var old = context.id, id = context.id = '__ZZ__'
+                try {
+                    return context.querySelectorAll('#' + id + ' ' + s)
+                } catch(e){
+                    throw new Error('querySelectorAll: ' + e)
+                } finally {
+                    old ? context.id = old : context.removeAttribute('id')
+                }
+            }
+            return makeArray(context.querySelectorAll(s))
+        }
+        // className
+        if ( rCls.test(s) ) {
+            var ary = s.split('.')
+            var    tag = ary[0] 
+            var    cls = ary[1]
+            if (context.getElementsByClassName) {
+                var elems = context.getElementsByClassName(cls)
+                if (tag) {
+                    for (var i = 0, len = elems.length; i < len; i++) {
+                        var el = elems[i]
+                        el.tagName.toLowerCase() === tag && arr.push(el)
+                    }
+                    return arr
+                } else {
+                    return makeArray(elems)
+                }
+            } else {
+                var all = context.getElementsByTagName(tag || '*')
+                return filter(all, 'className', cls)
+            }
+        }
+        // Tag name
+        if ( rTag.test(s) ) {
+            return makeArray(context.getElementsByTagName(s))
+        }
+        // Attribute
+        if ( rAttr.test(s) ) {
+            var result = rAttr.exec(s)
+            var all = context.getElementsByTagName(result[1] || '*')
+            return filter(all, result[2], result[4])
+        }
+    }
+    
+    return query
 }(win, doc);
 
 // field type
@@ -198,8 +200,12 @@ function noop() {}
 
 // If the jQuery exists, use it
 function $(selector) {
-    return win.jQuery ? win.jQuery(selector)[0] : query(selector)[0]
+    return win.jQuery ? win.jQuery(selector) : query(selector)
 }
+function single(selector) {
+    return $(selector)[0]
+}
+Util.$ = $
 
 // Error class
 function ZVError(errorMsg) {
@@ -416,13 +422,33 @@ var Validate = {
         }
         return true
     },
+    /**
+     * 手机号校验
+     * @param {Object} val
+     * @param {Object} option
+     *      failureMsg {String} 错误提示
+     */    
+    mobile: function(val, option) {
+        var option = option || {}
+        var msg = option.failureMsg || '请输入正确的手机号!'
+
+        // 必须为11位
+        var leng = val.length === 11
+
+        // 验证正则
+        var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
+        if (!reg.test(val)) {
+            Validate.fail(msg)
+        }
+        return true
+    },
     confirmation: function(val, option) {
         if (!option.match) {
             throw new Error('Error validating confirmation: Id of element to match must be provided')
         }
         var option = option || {}
         var message = option.failureMsg || '两次输入不一致!'
-        var match = option.match.nodeName ? option.match : $(option.match)
+        var match = option.match.nodeName ? option.match : single(option.match)
         if (!match) {
             throw new Error('There is no reference with name of, or element with id of ' + option.match)
         }
@@ -457,6 +483,7 @@ var Validate = {
         throw new ZVError(errorMsg)
     }
 };
+
 /**
  *  Validation Class 公开类
  * 
@@ -483,15 +510,32 @@ var Validate = {
  */
 function Validation(elem, option) {
     if (!elem) return
-    this.element = elem.nodeName ? elem : $(elem)
+    this.element = elem.nodeName ? elem : single(elem)
     if (!this.element) throw new Error('element is not exits')
     this.initialize(option)
 }
-
+/**
+ * convenience method to add validation 
+ * @param {Object} elem
+ * @param {Object} validate
+ * @param {Object} instanceOption
+ * @param {Object} validateOption
+ */
 Validation.add = function(elem, validate, instanceOption, validateOption) {
     var vObj = new Validation(elem, instanceOption)
     vObj.add(validate, validateOption)
     return vObj
+}
+/**
+ * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
+ * @param {DOM Element} container
+ */
+Validation.init = function(container) {
+	var elems = $('[data-validate]', container)
+	Util.forEach(elems, function(elem) {
+		var vali = new Validation(elem)
+		vali.add(elem.getAttribute('data-validate'))
+	})
 }
 
 Validation.prototype = {
@@ -511,7 +555,7 @@ Validation.prototype = {
         this.validMsg = option.validMsg || 
                 element.getAttribute('data-validate-succ') || '填写正确'
         var node = option.insertAfterWhatNode || element
-        this.insertAfterWhatNode = node.nodeType ? node : $(node)
+        this.insertAfterWhatNode = node.nodeType ? node : single(node)
         this.onlyOnBlur = option.onlyOnBlur || false
         this.wait = option.wait || 0
         this.onlyOnSubmit = option.onlyOnSubmit || false
@@ -842,7 +886,7 @@ function ValidationForm(elem) {
 }
 ValidationForm.getInstance = function(elem) {
     if (!elem) return
-    var el = elem.nodeName ? elem : $(elem)
+    var el = elem.nodeName ? elem : single(elem)
     if (!el.id) {
         el.id = 'formId_' + uuid++
     }
@@ -904,6 +948,22 @@ ValidationForm.prototype = {
         return true
     }
 };
+/*
+ * 自执行验证，通过element上的Script的data-run="true"
+ * 
+ */
+~function() {
+    var oldOnload = win.onload
+    win.onload = function() {
+        var canRun = single('script[data-run=true]')
+        if (!canRun) return
+        var selector = canRun.getAttribute('data-container')
+        var container = $(selector)
+        Validation.init(container)
+        if (oldOnload) oldOnload.call(win)
+    }
+}()
+
 
 // Expose Validation to the global object or as AMD module
 if (typeof define === 'function' && define.amd) {

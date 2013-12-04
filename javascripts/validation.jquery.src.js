@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2013-06-20 12:31:19
+ * @snandy 2013-12-04 11:05:53
  *
  */
 ~function(win, doc, undefined) {
@@ -45,8 +45,12 @@ function noop() {}
 
 // If the jQuery exists, use it
 function $(selector) {
-    return win.jQuery ? win.jQuery(selector)[0] : query(selector)[0]
+    return win.jQuery ? win.jQuery(selector) : query(selector)
 }
+function single(selector) {
+    return $(selector)[0]
+}
+Util.$ = $
 
 // Error class
 function ZVError(errorMsg) {
@@ -263,13 +267,33 @@ var Validate = {
         }
         return true
     },
+    /**
+     * 手机号校验
+     * @param {Object} val
+     * @param {Object} option
+     *      failureMsg {String} 错误提示
+     */    
+    mobile: function(val, option) {
+        var option = option || {}
+        var msg = option.failureMsg || '请输入正确的手机号!'
+
+        // 必须为11位
+        var leng = val.length === 11
+
+        // 验证正则
+        var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
+        if (!reg.test(val)) {
+            Validate.fail(msg)
+        }
+        return true
+    },
     confirmation: function(val, option) {
         if (!option.match) {
             throw new Error('Error validating confirmation: Id of element to match must be provided')
         }
         var option = option || {}
         var message = option.failureMsg || '两次输入不一致!'
-        var match = option.match.nodeName ? option.match : $(option.match)
+        var match = option.match.nodeName ? option.match : single(option.match)
         if (!match) {
             throw new Error('There is no reference with name of, or element with id of ' + option.match)
         }
@@ -304,6 +328,7 @@ var Validate = {
         throw new ZVError(errorMsg)
     }
 };
+
 /**
  *  Validation Class 公开类
  * 
@@ -330,15 +355,32 @@ var Validate = {
  */
 function Validation(elem, option) {
     if (!elem) return
-    this.element = elem.nodeName ? elem : $(elem)
+    this.element = elem.nodeName ? elem : single(elem)
     if (!this.element) throw new Error('element is not exits')
     this.initialize(option)
 }
-
+/**
+ * convenience method to add validation 
+ * @param {Object} elem
+ * @param {Object} validate
+ * @param {Object} instanceOption
+ * @param {Object} validateOption
+ */
 Validation.add = function(elem, validate, instanceOption, validateOption) {
     var vObj = new Validation(elem, instanceOption)
     vObj.add(validate, validateOption)
     return vObj
+}
+/**
+ * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
+ * @param {DOM Element} container
+ */
+Validation.init = function(container) {
+	var elems = $('[data-validate]', container)
+	Util.forEach(elems, function(elem) {
+		var vali = new Validation(elem)
+		vali.add(elem.getAttribute('data-validate'))
+	})
 }
 
 Validation.prototype = {
@@ -358,7 +400,7 @@ Validation.prototype = {
         this.validMsg = option.validMsg || 
                 element.getAttribute('data-validate-succ') || '填写正确'
         var node = option.insertAfterWhatNode || element
-        this.insertAfterWhatNode = node.nodeType ? node : $(node)
+        this.insertAfterWhatNode = node.nodeType ? node : single(node)
         this.onlyOnBlur = option.onlyOnBlur || false
         this.wait = option.wait || 0
         this.onlyOnSubmit = option.onlyOnSubmit || false
@@ -689,7 +731,7 @@ function ValidationForm(elem) {
 }
 ValidationForm.getInstance = function(elem) {
     if (!elem) return
-    var el = elem.nodeName ? elem : $(elem)
+    var el = elem.nodeName ? elem : single(elem)
     if (!el.id) {
         el.id = 'formId_' + uuid++
     }
@@ -751,6 +793,22 @@ ValidationForm.prototype = {
         return true
     }
 };
+/*
+ * 自执行验证，通过element上的Script的data-run="true"
+ * 
+ */
+~function() {
+    var oldOnload = win.onload
+    win.onload = function() {
+        var canRun = single('script[data-run=true]')
+        if (!canRun) return
+        var selector = canRun.getAttribute('data-container')
+        var container = $(selector)
+        Validation.init(container)
+        if (oldOnload) oldOnload.call(win)
+    }
+}()
+
 
 // Expose Validation to the global object or as AMD module
 if (typeof define === 'function' && define.amd) {
