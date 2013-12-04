@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2013-10-02 16:04:14
+ * @snandy 2013-12-04 11:05:53
  *
  */
 ~function(win, doc, undefined) {
@@ -281,7 +281,7 @@ var Validate = {
         var leng = val.length === 11
 
         // 验证正则
-        var reg = /^1(?:[38]\d|4[57]|5[01256789])\d{8}$/
+        var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
         if (!reg.test(val)) {
             Validate.fail(msg)
         }

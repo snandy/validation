@@ -222,7 +222,7 @@ var Validate = {
         var leng = val.length === 11
 
         // 验证正则
-        var reg = /^1(?:[38]\d|4[57]|5[01256789])\d{8}$/
+        var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
         if (!reg.test(val)) {
             Validate.fail(msg)
         }
