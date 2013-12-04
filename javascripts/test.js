@@ -67,6 +67,7 @@ var zv23Obj = new Validation('#zv23')
 zv23Obj.add('confirmation', {match: '#pwd'})
 
 
+Validation.add('#zv24', 'mobile')
 
 
 
