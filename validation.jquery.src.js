@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2013-12-04 11:05:53
+ * @snandy 2014-01-13 19:11:47
  *
  */
 ~function(win, doc, undefined) {
@@ -383,12 +383,13 @@ Validation.init = function(container) {
 	})
 }
 
+var validClass = 'ZV_valid'
+var invalidClass = 'ZV_invalid'
+var messageClass = 'ZV_validation_msg'
+var validFieldClass = 'ZV_valid_field'
+var invalidFieldClass = 'ZV_invalid_field'
+
 Validation.prototype = {
-    validClass: 'ZV_valid',
-    invalidClass: 'ZV_invalid',
-    messageClass: 'ZV_validation_msg',
-    validFieldClass: 'ZV_valid_field',
-    invalidFieldClass: 'ZV_invalid_field',
     initialize: function(option) {
         var element = this.element
         this.validations = []
@@ -656,8 +657,8 @@ Validation.prototype = {
         var val = this.element.value
         var whatNode = this.insertAfterWhatNode
         if ( (this.showMessageWhenEmpty && (this.elemType === TYPE.checkbox || val === '')) || val !== '' ) {
-            var className = this.validateFailed ? this.invalidClass : this.validClass
-            elem.className += ' ' + this.messageClass + ' ' + className;
+            var className = this.validateFailed ? invalidClass : validClass
+            elem.className += ' ' + messageClass + ' ' + className;
             var parent = whatNode.parentNode
             if (whatNode.nextSibling) {
                 parent.insertBefore(elem, whatNode.nextSibling)
@@ -668,8 +669,8 @@ Validation.prototype = {
     },
     addFieldClass: function() {
         var element = this.element
-        var validCls = this.validFieldClass
-        var invalidCls = this.invalidFieldClass
+        var validCls = validFieldClass
+        var invalidCls = invalidFieldClass
         
         this.removeFieldClass()
         if (!this.validateFailed) {
@@ -694,17 +695,17 @@ Validation.prototype = {
             }
             el = el.nextSibling
         }
-        if (nextEl && nextEl.className.indexOf(this.messageClass) != -1) {
+        if (nextEl && nextEl.className.indexOf(messageClass) != -1) {
             this.insertAfterWhatNode.parentNode.removeChild(nextEl)
         }
     },
     removeFieldClass: function() {
         var cls = this.element.className
-        if (cls.indexOf(this.invalidFieldClass) !== -1) {
-            this.element.className = cls.split(this.invalidFieldClass).join('')
+        if (cls.indexOf(invalidFieldClass) !== -1) {
+            this.element.className = cls.split(invalidFieldClass).join('')
         }
-        if (cls.indexOf(this.validFieldClass) !== -1) {
-            this.element.className = cls.split(this.validFieldClass).join(' ')
+        if (cls.indexOf(validFieldClass) !== -1) {
+            this.element.className = cls.split(validFieldClass).join(' ')
         }
     },
     removeMessageAndFieldClass: function() {
