@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2014-01-13 19:11:47
+ * @snandy 2014-01-14 16:46:18
  *
  */
 ~function(win, doc, undefined) {
@@ -70,119 +70,124 @@ forEach(['Array', 'Boolean', 'Function', 'Object', 'String', 'Number'], function
  */
 var query = function(win, doc, undefined) {
     
-    // Save a reference to core methods
-    var slice = Array.prototype.slice
-    
-    // selector regular expression
-    var rId = /^#[\w\-]+/
-    var rTag = /^([\w\*]+)$/
-    var rCls = /^([\w\-]+)?\.([\w\-]+)/
-    var rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
-    
-    // For IE9/Firefox/Safari/Chrome/Opera
-    var makeArray = function(obj) {
-        return slice.call(obj, 0)
-    }
-    // For IE6/7/8
-    try{
-        slice.call(doc.documentElement.childNodes, 0)[0].nodeType
-    } catch(e) {
-        makeArray = function(obj) {
-            var result = []
-            for (var i = 0, len = obj.length; i < len; i++) {
-                result[i] = obj[i]
-            }
-            return result
-        }
-    }
-    
-    function byId(id) {
-        return doc.getElementById(id)
-    }
-    function check(attr, val, node) {
-        var reg = RegExp('(?:^|\\s+)' + val + '(?:\\s+|$)')
-        var    attribute = attr === 'className' ? 
-                node.className : node.getAttribute(attr)
-        if (attribute) {
-            if (val) {
-                if (reg.test(attribute)) return true
-            } else {
-                return true
-            }
-        }
-        return false
-    }    
-    function filter(all, attr, val) {
-        var el, result = []
-        var i = 0, r = 0
-        while ( (el = all[i++]) ) {
-            if ( check(attr, val, el) ) {
-                result[r++] = el
-            }
+// Save a reference to core methods
+var slice = Array.prototype.slice
+
+// selector regular expression
+var rId = /^#[\w\-]+/
+var rTag = /^([\w\*]+)$/
+var rCls = /^([\w\-]+)?\.([\w\-]+)/
+var rAttr = /^([\w]+)?\[([\w]+-?[\w]+?)(=(\w+))?\]/
+
+// For IE9/Firefox/Safari/Chrome/Opera
+var makeArray = function(obj) {
+    return slice.call(obj, 0)
+}
+// For IE6/7/8
+try{
+    slice.call(doc.documentElement.childNodes, 0)[0].nodeType
+} catch(e) {
+    makeArray = function(obj) {
+        var result = []
+        for (var i = 0, len = obj.length; i < len; i++) {
+            result[i] = obj[i]
         }
         return result
     }
-        
-    function query(selector, context) {
-        var s = selector, arr = []
-        var context = context === undefined ? doc : typeof context === 'string' ?
-                byId(context.substr(1, context.length)) : context
-        
-        if (!selector) return arr
-        
-        // id 还是用docuemnt.getElementById最快
-        if ( rId.test(s) ) {
-            arr[0] = byId( s.substr(1, s.length) )
-            return arr
-        }
-        // 优先使用querySelector，现代浏览器都实现它了
-        if (context.querySelectorAll) {
-            if (context.nodeType === 1) {
-                var old = context.id, id = context.id = '__ZZ__'
-                try {
-                    return context.querySelectorAll('#' + id + ' ' + s)
-                } catch(e){
-                    throw new Error('querySelectorAll: ' + e)
-                } finally {
-                    old ? context.id = old : context.removeAttribute('id')
-                }
-            }
-            return makeArray(context.querySelectorAll(s))
-        }
-        // className
-        if ( rCls.test(s) ) {
-            var ary = s.split('.')
-            var    tag = ary[0] 
-            var    cls = ary[1]
-            if (context.getElementsByClassName) {
-                var elems = context.getElementsByClassName(cls)
-                if (tag) {
-                    for (var i = 0, len = elems.length; i < len; i++) {
-                        var el = elems[i]
-                        el.tagName.toLowerCase() === tag && arr.push(el)
-                    }
-                    return arr
-                } else {
-                    return makeArray(elems)
-                }
-            } else {
-                var all = context.getElementsByTagName(tag || '*')
-                return filter(all, 'className', cls)
-            }
-        }
-        // Tag name
-        if ( rTag.test(s) ) {
-            return makeArray(context.getElementsByTagName(s))
-        }
-        // Attribute
-        if ( rAttr.test(s) ) {
-            var result = rAttr.exec(s)
-            var all = context.getElementsByTagName(result[1] || '*')
-            return filter(all, result[2], result[4])
+}
+
+function byId(id) {
+    return doc.getElementById(id)
+}
+function check(attr, val, node) {
+    var reg = RegExp('(?:^|\\s+)' + val + '(?:\\s+|$)')
+    var    attribute = attr === 'className' ? 
+            node.className : node.getAttribute(attr)
+    if (attribute) {
+        if (val) {
+            if (reg.test(attribute)) return true
+        } else {
+            return true
         }
     }
+    return false
+}    
+function filter(all, attr, val) {
+    var el, result = []
+    var    i = 0, r = 0
+    while ( (el = all[i++]) ) {
+        if ( check(attr, val, el) ) {
+            result[r++] = el
+        }
+    }
+    return result
+}
     
-    return query
+return function(selector, context) {
+    var s = selector, arr = []
+    var context = context === undefined ? doc : 
+        typeof context === 'string' ? query(context)[0] : context
+            
+    if (!selector) return arr
+    
+    // id和tagName 直接使用 getElementById 和 getElementsByTagName
+
+    // id 
+    if ( rId.test(s) ) {
+        arr[0] = byId( s.substr(1, s.length) )
+        return arr
+    }
+    
+    // Tag name
+    if ( rTag.test(s) ) {
+        return makeArray(context.getElementsByTagName(s))
+    }
+
+    // 优先使用querySelector，现代浏览器都实现它了
+    if (context.querySelectorAll) {
+        if (context.nodeType === 1) {
+            var old = context.id, id = context.id = '__ZZ__'
+            try {
+                return context.querySelectorAll('#' + id + ' ' + s)
+            } catch(e) {
+                throw new Error('querySelectorAll: ' + e)
+            } finally {
+                old ? context.id = old : context.removeAttribute('id')
+            }
+        }
+        return makeArray(context.querySelectorAll(s))
+    }
+    
+    // ClassName
+    if ( rCls.test(s) ) {
+        var ary = s.split('.')
+        var tag = ary[0] 
+        var cls = ary[1]
+        if (context.getElementsByClassName) {
+            var elems = context.getElementsByClassName(cls)
+            if (tag) {
+                for (var i = 0, len = elems.length; i < len; i++) {
+                    var el = elems[i]
+                    el.tagName.toLowerCase() === tag && arr.push(el)
+                }
+                return arr
+            } else {
+                return makeArray(elems)
+            }
+        } else {
+            var all = context.getElementsByTagName(tag || '*')
+            return filter(all, 'className', cls)
+        }
+    }
+
+    // Attribute
+    if ( rAttr.test(s) ) {
+        var result = rAttr.exec(s)
+        var all = context.getElementsByTagName(result[1] || '*')
+        return filter(all, result[2], result[4])
+    }
+}
+
 }(win, doc);
 
 // field type
@@ -200,7 +205,11 @@ function noop() {}
 
 // If the jQuery exists, use it
 function $(selector) {
-    return win.jQuery ? win.jQuery(selector) : query(selector)
+    if (win.jQuery) {
+        return win.jQuery(selector)
+    } else if (typeof query !== 'undefined') {
+        return query(selector)
+    }
 }
 function single(selector) {
     return $(selector)[0]
@@ -490,91 +499,121 @@ var Validate = {
  * @param {Object} elem [id or css selector(jQuery support)]
  * @param {Object} option
  * 
- *     option properties: 
- *      validMsg {String}             正确的提示消息 ,如果没传，将从输入域的data-validate-succ取  (默认 "填写正确")
- *      insertAfterWhatNode {Element} 提示信息插入的位置，如果该元素存在在插入它后面 (默认插在输入域的后面)
- *      onlyBlur {Bool}               是否仅在光标离验证 (默认false)
- *      onlyOnSubmit {Bool}           是否仅在Form提交时验证
- *      wait {int}                    延迟验证的时间 (默认0)
+ *   option properties: 
+ *      succMsg {String}            正确的提示消息 ,如果没传，将从输入域的data-vali-succmsg取  (默认 "填写正确")
+ *      afterWhatNode {Element}     提示信息插入的位置，如果该元素存在在插入它后面 (默认插在输入域的后面)
+ *      onlyOnBlur {Bool}             是否仅在光标离验证 (默认false)
+ *      onlyOnSubmit {Bool}         是否仅在Form提交时验证
+ *      wait {int}                  延迟验证的时间 (默认0)
  *      
- *      beforeValidate {Function}     验证前的回调函数 (默认 noop)
- *      beforeValid {Function}        验证正确时执行，在onValid前 
- *      onValid {Function}            验证正确函数，此函数将覆盖默认处理函数，你必须实现将正确提示消息展现到UI
- *      afterValid {Function}         验证正确时执行，在onValid后
+ *      beforeValidate {Function}   验证前的回调函数 (默认 noop)
+ *      beforeSucc {Function}       验证正确时执行，在onValid前 
+ *      onSucc {Function}           验证正确函数，此函数将覆盖默认处理函数，你必须实现将正确提示消息展现到UI
+ *      afterSucc {Function}        验证正确时执行，在onValid后
  * 
- *      beforeInValid {Function}      验证失败时执行，在onInValid前
- *      onInValid {Function}          验证失败函数，此函数将覆盖默认处理函数，你必须实现将失败提示消息展现到UI
- *      afterInValid {Function}       验证失败时执行，在onValid后
- *      afterValidate {Function}      验证前的回调函数 (默认 noop)
+ *      beforeFail {Function}       验证失败时执行，在onInValid前
+ *      onFail {Function}           验证失败函数，此函数将覆盖默认处理函数，你必须实现将失败提示消息展现到UI
+ *      afterFail {Function}        验证失败时执行，在onValid后
+ *      afterValidate {Function}    验证前的回调函数 (默认 noop)
  * 
  */
 function Validation(elem, option) {
     if (!elem) return
-    this.element = elem.nodeName ? elem : single(elem)
-    if (!this.element) throw new Error('element is not exits')
+    this.elem = elem.nodeName ? elem : single(elem)
+    if (!this.elem) throw new Error('element is not exits')
     this.initialize(option)
 }
+
+var validClass = 'zv_valid'
+var invalidClass = 'zv_invalid'
+var messageClass = 'zv_vali_msg'
+var fieldSuccClass = 'zv_succ_field'
+var fieldFailClass = 'zv_fail_field'
+
 /**
- * convenience method to add validation 
- * @param {Object} elem
- * @param {Object} validate
- * @param {Object} instanceOption
- * @param {Object} validateOption
+ * 获取被验证元素的类型
  */
-Validation.add = function(elem, validate, instanceOption, validateOption) {
-    var vObj = new Validation(elem, instanceOption)
-    vObj.add(validate, validateOption)
-    return vObj
-}
-/**
- * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
- * @param {DOM Element} container
- */
-Validation.init = function(container) {
-	var elems = $('[data-validate]', container)
-	Util.forEach(elems, function(elem) {
-		var vali = new Validation(elem)
-		vali.add(elem.getAttribute('data-validate'))
-	})
+function getType(elem) {
+    var ntype = elem.type.toUpperCase()
+    var nname = elem.nodeName.toUpperCase()
+    switch (true) {
+        case (nname == 'TEXTAREA'):
+            return TYPE.textarea
+        case (nname == 'INPUT' && ntype == 'TEXT'):
+            return TYPE.text
+        case (nname == 'INPUT' && ntype == 'PASSWORD'):
+            return TYPE.password
+        case (nname == 'INPUT' && ntype == 'CHECKBOX'):
+            return TYPE.checkbox
+        case (nname == 'INPUT' && ntype == 'FILE'):
+            return TYPE.file
+        case (nname == 'SELECT'):
+            return TYPE.select
+        case (nname == 'INPUT'):
+            throw new Error('Cannot use Validation on an ' + ntype.toLowerCase() + ' input')
+        default:
+            throw new Error('Element must be an input/select/textarea - ' + nname.toLowerCase() + ' was given')
+    }
 }
 
-var validClass = 'ZV_valid'
-var invalidClass = 'ZV_invalid'
-var messageClass = 'ZV_validation_msg'
-var validFieldClass = 'ZV_valid_field'
-var invalidFieldClass = 'ZV_invalid_field'
+/**
+ * 创建提示信息，默认是span元素
+ */
+function createMessage(tag, msg) {
+    var span = doc.createElement(tag || 'span')
+    var textNode = doc.createTextNode(msg)
+    span.appendChild(textNode)
+    return span
+}
 
 Validation.prototype = {
     initialize: function(option) {
-        var element = this.element
+        var elem = this.elem
         this.validations = []
-        this.elemType = this.getType()
-        this.form = element.form
+        this.elemType = getType(elem)
+        this.form = elem.form
 
         // options
         var option = option || {}
-        this.validMsg = option.validMsg || 
-                element.getAttribute('data-validate-succ') || '填写正确'
-        var node = option.insertAfterWhatNode || element
-        this.insertAfterWhatNode = node.nodeType ? node : single(node)
+
+        // 验证正确的提示语
+        this.succMsg = option.succMsg || elem.getAttribute('data-succ-msg') || '填写正确'
+
+        // 提示语插入在哪个元素后面，可以是dom元素或css选择器
+        var node = option.afterWhatNode || elem
+        this.afterWhatNode = node.nodeType ? node : single(node)
+
+        // 是否仅在鼠标离开时验证，默认否
         this.onlyOnBlur = option.onlyOnBlur || false
-        this.wait = option.wait || 0
-        this.onlyOnSubmit = option.onlyOnSubmit || false
         
-        // events
+        // 是否仅在form提交的时候验证，默认否
+        this.onlyOnSubmit = option.onlyOnSubmit || false
+
+        // 延迟验证的设定
+        this.wait = option.wait || 0
+        
+        // events 验证前、验证后、验证中
+
+        // 验证前
         this.beforeValidate = option.beforeValidate || noop
-        this.beforeValid    = option.beforeValid || noop
-        this.onValid = option.onValid || function() {
-            this.insertMessage(this.createMessage())
+
+        // 验证通过
+        this.beforeSucc = option.beforeSucc || noop
+        this.onSucc = option.onSucc || function() {
+            this.insertMessage(createMessage('', this.message))
             this.addFieldClass()
         }
-        this.afterValid    = option.afterValid || noop
-        this.beforeInvalid = option.beforeInvalid || noop
-        this.onInvalid = option.onInvalid || function() {
-            this.insertMessage(this.createMessage())
+        this.afterSucc = option.afterSucc || noop
+
+        // 验证不通过
+        this.beforeFail = option.beforeFail || noop
+        this.onFail = option.onFail || function() {
+            this.insertMessage(createMessage('', this.message))
             this.addFieldClass()
         }
-        this.afterInvalid  = option.afterInvalid || noop
+        this.afterFail  = option.afterFail || noop
+
+        // 验证后
         this.afterValidate = option.afterValidate || noop
         
         // add to form if it has been provided
@@ -583,43 +622,49 @@ Validation.prototype = {
             this.formObj.addField(this)
         }
 
-        // collect old events
-        this.oldOnFocus  = element.onfocus  || noop
-        this.oldOnBlur   = element.onblur   || noop
-        this.oldOnClick  = element.onclick  || noop
-        this.oldOnChange = element.onchange || noop
-        this.oldOnKeyup  = element.onkeyup  || noop
+        // 暂存旧事件hander
+        this.oldOnFocus  = elem.onfocus  || noop
+        this.oldOnBlur   = elem.onblur   || noop
+        this.oldOnClick  = elem.onclick  || noop
+        this.oldOnChange = elem.onchange || noop
+        this.oldOnKeyup  = elem.onkeyup  || noop
         
         var self = this
-        element.onfocus = function(e) {
-            self.doOnFocus(e)
+        elem.onfocus = function(e) {
+            self.removeMessageAndFieldClass()
             return self.oldOnFocus.call(this, e)
         }
         
+        // 仅在form submit时验证
         if (this.onlyOnSubmit) return
         
+        // 自行决定验证时机
+        if (this.onlyOnAsync) {
+
+        }
+
         switch (this.elemType) {
             case TYPE.checkbox:
-                element.onclick = function(e) {
+                elem.onclick = function(e) {
                     self.validate()
                     return self.oldOnClick.call(this, e)
                 }
             case TYPE.select:
             case TYPE.file:
-                element.onchange = function(e) {
+                elem.onchange = function(e) {
                     self.validate()
                     return self.oldOnChange.call(this, e)
                 }
-                break;
+                break; 
             default:
                 if (!this.onlyOnBlur) {
-                    element.onkeyup = function(e) {
+                    elem.onkeyup = function(e) {
                         self.deferValidation()
                         return self.oldOnKeyup.call(this, e)
                     }
                 }
-                element.onblur = function(e) {
-                    self.doOnBlur(e)
+                elem.onblur = function(e) {
+                    self.validate(e)
                     return self.oldOnBlur.call(this, e)
                 }
         }
@@ -632,21 +677,21 @@ Validation.prototype = {
             this.formObj.destroy()
         }
         // remove events - set them back to the previous events
-        this.element.onfocus = this.oldOnFocus
+        this.elem.onfocus = this.oldOnFocus
         if (!this.onlyOnSubmit) {
             switch (this.elemType) {
                 case TYPE.checkbox:
-                    this.element.onclick = this.oldOnClick
+                    this.elem.onclick = this.oldOnClick
                 // let it run into the next to add a change event too
                 case TYPE.select:
                 case TYPE.file:
-                    this.element.onchange = this.oldOnChange
+                    this.elem.onchange = this.oldOnChange
                     break
                 default:
                     if (!this.onlyOnBlur) {
-                        this.element.onkeyup = this.oldOnKeyup
+                        this.elem.onkeyup = this.oldOnKeyup
                     }
-                    this.element.onblur = this.oldOnBlur
+                    this.elem.onblur = this.oldOnBlur
             }
         }
         this.validations = []
@@ -656,7 +701,7 @@ Validation.prototype = {
         var self = this
         option = option || {}
         if (!option.failureMsg) {
-            option.failureMsg = self.element.getAttribute('data-validate-err')
+            option.failureMsg = self.elem.getAttribute('data-error-msg')
         }
         if ( Util.isString(op) ) {
             forEach(op.split(' '), function(n, i) {
@@ -679,42 +724,13 @@ Validation.prototype = {
     },
     deferValidation: function(e) {
         var self = this
-        if (this.wait >= 300) this.removeMessageAndFieldClass()
-        if (this.timeout) clearTimeout(self.timeout)
-        this.timeout = setTimeout(function(){ self.validate()}, self.wait)
+        if (self.wait >= 300) self.removeMessageAndFieldClass()
+        if (self.timeout) clearTimeout(self.timeout)
+        self.timeout = setTimeout(function() {
+            self.validate()
+        }, self.wait)
     },
-    doOnBlur: function(e) {
-        this.focused = false
-        this.validate(e)
-    },
-    doOnFocus: function(e) {
-        this.focused = true
-        this.removeMessageAndFieldClass()
-    },
-    getType: function() {
-        var element = this.element
-        var ntype = element.type.toUpperCase()
-        var nname = element.nodeName.toUpperCase()
-        switch (true) {
-            case (nname == 'TEXTAREA'):
-                return TYPE.textarea
-            case (nname == 'INPUT' && ntype == 'TEXT'):
-                return TYPE.text
-            case (nname == 'INPUT' && ntype == 'PASSWORD'):
-                return TYPE.password
-            case (nname == 'INPUT' && ntype == 'CHECKBOX'):
-                return TYPE.checkbox
-            case (nname == 'INPUT' && ntype == 'FILE'):
-                return TYPE.file
-            case (nname == 'SELECT'):
-                return TYPE.select
-            case (nname == 'INPUT'):
-                throw new Error('Cannot use Validation on an ' + ntype.toLowerCase() + ' input')
-            default:
-                throw new Error('Element must be an input/select/textarea - ' + nname.toLowerCase() + ' was given')
-        }
-    },
-    doValidations: function() {
+    doValidation: function() {
         var validations = this.validations
         var length = validations.length
         this.validateFailed = false
@@ -723,9 +739,9 @@ Validation.prototype = {
             this.validateFailed = !this.perform(vs.validateFunc, vs.params)
             if (this.validateFailed) {
                 return false
-            } 
+            }
         }
-        this.message = this.validMsg
+        this.message = this.succMsg
         return true
     },
     perform: function(func, option) {
@@ -743,14 +759,14 @@ Validation.prototype = {
                 break;
         }
         // select and checkbox elements values are handled differently
-        var element = this.element
+        var elem = this.elem
         var elType  = this.elemType 
-        var val = (elType === TYPE.select) ? element.options[element.selectedIndex].value : element.value
+        var val = (elType === TYPE.select) ? elem.options[elem.selectedIndex].value : elem.value
         if (func == Validate.acceptance) {
             if (elType != TYPE.checkbox) {
                 throw new Error('Element to validate acceptance must be a checkbox')
             }
-            val = element.checked
+            val = elem.checked
         }
         // now validate
         var isValid = true
@@ -772,45 +788,29 @@ Validation.prototype = {
         }
     },
     validate: function(e) {
-        if (this.element.disabled) return true
+        if (this.elem.disabled) return true
         this.beforeValidate()
-        var isValid = this.doValidations()
+        var isValid = this.doValidation()
         if (isValid) {
-            this.beforeValid()
-            this.onValid()
-            this.afterValid()
-            return true
+            this.beforeSucc()
+            this.onSucc()
+            this.afterSucc()
         } else {
-            this.beforeInvalid()
-            this.onInvalid()
-            this.afterInvalid()
-            return false
+            this.beforeFail()
+            this.onFail()
+            this.afterFail()
         }
         this.afterValidate()
-    },
-    enable: function() {
-        this.element.disabled = false
-        return this
-    },
-    disable: function() {
-        this.element.disabled = true
-        this.removeMessageAndFieldClass()
-        return this
-    },
-    createMessage: function() {
-        var span = doc.createElement('span')
-        var textNode = doc.createTextNode(this.message)
-        span.appendChild(textNode)
-        return span
+        return isValid
     },
     insertMessage: function(elem) {
         this.removeMessage()
+
         // dont insert anything if vaalidMesssage has been set to false or empty string
-        if (!this.validateFailed && !this.validMsg) {
-            return
-        }
-        var val = this.element.value
-        var whatNode = this.insertAfterWhatNode
+        if (!this.validateFailed && !this.succMsg) return
+        
+        var val = this.elem.value
+        var whatNode = this.afterWhatNode
         if ( (this.showMessageWhenEmpty && (this.elemType === TYPE.checkbox || val === '')) || val !== '' ) {
             var className = this.validateFailed ? invalidClass : validClass
             elem.className += ' ' + messageClass + ' ' + className;
@@ -823,26 +823,23 @@ Validation.prototype = {
         }
     },
     addFieldClass: function() {
-        var element = this.element
-        var validCls = validFieldClass
-        var invalidCls = invalidFieldClass
-        
+        var elem = this.elem        
         this.removeFieldClass()
         if (!this.validateFailed) {
-            if (this.showMessageWhenEmpty || element.value !== '') {
-                if (element.className.indexOf(validCls) === -1) {
-                    element.className += ' ' + validCls
+            if (this.showMessageWhenEmpty || elem.value !== '') {
+                if (elem.className.indexOf(fieldSuccClass) === -1) {
+                    elem.className += ' ' + fieldSuccClass
                 }
             }
         } else {
-            if (element.className.indexOf(invalidCls) === -1) {
-                element.className += ' ' + invalidCls
+            if (elem.className.indexOf(fieldFailClass) === -1) {
+                elem.className += ' ' + fieldFailClass
             }
         }
     },
     removeMessage: function() {
         var nextEl
-        var el = this.insertAfterWhatNode
+        var el = this.afterWhatNode
         while (el.nextSibling) {
             if (el.nextSibling.nodeType === 1) {
                 nextEl = el.nextSibling
@@ -851,23 +848,47 @@ Validation.prototype = {
             el = el.nextSibling
         }
         if (nextEl && nextEl.className.indexOf(messageClass) != -1) {
-            this.insertAfterWhatNode.parentNode.removeChild(nextEl)
+            this.afterWhatNode.parentNode.removeChild(nextEl)
         }
     },
     removeFieldClass: function() {
-        var cls = this.element.className
-        if (cls.indexOf(invalidFieldClass) !== -1) {
-            this.element.className = cls.split(invalidFieldClass).join('')
+        var cls = this.elem.className
+        if (cls.indexOf(fieldFailClass) !== -1) {
+            this.elem.className = cls.split(fieldFailClass).join('')
         }
-        if (cls.indexOf(validFieldClass) !== -1) {
-            this.element.className = cls.split(validFieldClass).join(' ')
+        if (cls.indexOf(fieldSuccClass) !== -1) {
+            this.elem.className = cls.split(fieldSuccClass).join(' ')
         }
     },
     removeMessageAndFieldClass: function() {
         this.removeMessage()
         this.removeFieldClass()
     }
-};
+}
+
+/**
+ * convenience method to add validation 
+ * @param {Object} elem
+ * @param {Object} validate
+ * @param {Object} instanceOption
+ * @param {Object} validateOption
+ */
+Validation.add = function(elem, validate, instanceOption, validateOption) {
+    var vObj = new Validation(elem, instanceOption)
+    vObj.add(validate, validateOption)
+    return vObj
+}
+/**
+ * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
+ * @param {DOM Element} container
+ */
+Validation.init = function(container) {
+    var elems = $('[data-validate]', container)
+    Util.forEach(elems, function(elem) {
+        var vali = new Validation(elem)
+        vali.add(elem.getAttribute('data-validate'))
+    })
+}
 
 // exports Util to Validation
 Validation.Util = Util
@@ -903,12 +924,12 @@ ValidationForm.prototype = {
     afterValidate:  noop,
     initialize: function(elem) {
         this.name = elem.id
-        this.element = elem
+        this.elem = elem
         this.fields = []
         // preserve the old onsubmit event
-        this.oldOnSubmit = this.element.onsubmit || noop
+        this.oldOnSubmit = this.elem.onsubmit || noop
         var self = this
-        this.element.onsubmit = function(e) {
+        this.elem.onsubmit = function(e) {
             var ret = false
             self.beforeValidate()
             self.valid = self.execValidate(self.fields)
@@ -943,7 +964,7 @@ ValidationForm.prototype = {
         // only destroy if has no fields and not being forced
         if (this.fields.length != 0 && !force) return false
         // remove events - set back to previous events
-        this.element.onsubmit = this.oldOnSubmit
+        this.elem.onsubmit = this.oldOnSubmit
         // remove from the instances namespace
         formInstance[this.name] = null
         return true

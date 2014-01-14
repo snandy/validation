@@ -29,12 +29,12 @@ ValidationForm.prototype = {
     afterValidate:  noop,
     initialize: function(elem) {
         this.name = elem.id
-        this.element = elem
+        this.elem = elem
         this.fields = []
         // preserve the old onsubmit event
-        this.oldOnSubmit = this.element.onsubmit || noop
+        this.oldOnSubmit = this.elem.onsubmit || noop
         var self = this
-        this.element.onsubmit = function(e) {
+        this.elem.onsubmit = function(e) {
             var ret = false
             self.beforeValidate()
             self.valid = self.execValidate(self.fields)
@@ -69,7 +69,7 @@ ValidationForm.prototype = {
         // only destroy if has no fields and not being forced
         if (this.fields.length != 0 && !force) return false
         // remove events - set back to previous events
-        this.element.onsubmit = this.oldOnSubmit
+        this.elem.onsubmit = this.oldOnSubmit
         // remove from the instances namespace
         formInstance[this.name] = null
         return true

@@ -13,7 +13,11 @@ function noop() {}
 
 // If the jQuery exists, use it
 function $(selector) {
-    return win.jQuery ? win.jQuery(selector) : query(selector)
+    if (win.jQuery) {
+        return win.jQuery(selector)
+    } else if (typeof query !== 'undefined') {
+        return query(selector)
+    }
 }
 function single(selector) {
     return $(selector)[0]
