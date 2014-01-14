@@ -3,64 +3,178 @@
 <head>
 	<meta charset='utf-8'/>
 	<title>Validation</title>
-	<link rel="stylesheet" href="stylesheets/styles.css">
+	<link rel="stylesheet" type="text/css" href="common.css" />
 	<style>
-		.ZV_validation_msg{
-			font-weight:bold;
-			margin:0 0 0 5px;
-		} 
-		.ZV_valid {
-			color:#00CC00;
+        .zv_vali_msg{
+            font-weight:bold;
+            margin:0 0 0 5px;
+        } 
+        .zv_valid {
+            color:#00CC00;
+        }
+        .zv_invalid {
+            color:#CC0000;
+        }
+        .zv_succ_field,
+        input.LV_valid_field:hover, 
+        input.LV_valid_field:active,
+        textarea.LV_valid_field:hover, 
+        textarea.LV_valid_field:active {
+            border: 1px solid #00CC00;
+        }   
+        .zv_fail_field, 
+        input.LV_invalid_field:hover, 
+        input.LV_invalid_field:active,
+        textarea.LV_invalid_field:hover, 
+        textarea.LV_invalid_field:active {
+            border: 1px solid #CC0000;
+        }
+		
+		table {
+			border: 0;
+			border-collapse:separate;
+			width: 650px;
+			margin: 20px 0;
 		}
-		.ZV_invalid {
-			color:#CC0000;
+		table td {
+			border: 0;
 		}
-		.ZV_valid_field,
-		input.LV_valid_field:hover, 
-		input.LV_valid_field:active,
-		textarea.LV_valid_field:hover, 
-		textarea.LV_valid_field:active {
-			border: 1px solid #00CC00;
-		}	
-		.ZV_invalid_field, 
-		input.LV_invalid_field:hover, 
-		input.LV_invalid_field:active,
-		textarea.LV_invalid_field:hover, 
-		textarea.LV_invalid_field:active {
-			border: 1px solid #CC0000;
+		caption {
+			font-weight: bold;
+			margin: 10px 0;
 		}
-		.submit {
+		.col {
 			text-align: right;
+			width: 50%;
+		}
+		a {
+			float: right;
 		}
 	</style>
-	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<script src="javascripts/validation.jquery.src.js"></script>
+	<script src="../../lib/jquery/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="../validation.jquery.src.js"></script>
 </head>
 <body id="top">
-    <div class="wrapper">
-        <header>
-            <h2>和jQuery一起</h2>
-            <p style="width:100%">页面中如果引入了jQuery，Validation.js可以很好的兼容。Validation的第一个参数可以是CSS Selector</p>
-        </header>
-        <section>
-                <p>
-                    必填项：<input type="text" class="a">
-                </p>
-                
-                <p>　数字：<input name="b" type="text"/></p>
-                
-<code><pre>
-// ClassName
-Validation.add('.a', 'presence')
-// Attribute
-Validation.add('[name=b]', 'numericality ')
-</pre></code>
-
-    	</section>
+	<table cellpadding="0">
+		<caption>存在性检验</caption>
+		<tr>
+			<td class="col">存在性</td>
+			<td><input id="lv1" type="text"/></td>
+		</tr>
+	</table>	
+	<table cellpadding="0">
+		<caption>数字校验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">数字</td>
+			<td><input id="lv2" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">整数</td>
+			<td><input id="lv3" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">特定数字 (5)</td>
+			<td><input id="lv4" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">最小约束 (5)</td>
+			<td><input id="lv5" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">最大约束 (5)</td>
+			<td><input id="lv6" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">大小范围限制 (3-9)</td>
+			<td><input id="lv7" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">介于 20 和 30 的整数</td>
+			<td><input id="lv8" type="text"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>长度校验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">特定长度 (4个字符)</td>
+			<td><input id="lv9" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">低限约束 (4个字符)</td>
+			<td><input id="lv10" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">高限约束 (4个字符)</td>
+			<td><input id="lv11" type="text"/></td>
+		</tr>	
+		<tr>
+			<td class="col">范围约束 (5-10个字符)</td>
+			<td><input id="lv12" type="text"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>格式检验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">输入包含 “love” 的单词(不分大小写)</td>
+			<td><input id="lv13" type="text"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>包含检验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">精确匹配(apple,banana,orange)</td>
+			<td><input id="lv14" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">部分匹配(apple,banana,orange)</td>
+			<td><input id="lv15" type="text"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>排除校验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">精确匹配(非apple,banana,orange)</td>
+			<td><input id="lv16" type="text"/></td>
+		</tr>
+		<tr>
+			<td class="col">部分匹配(非apple,banana,orange)</td>
+			<td><input id="lv17" type="text"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>认可校验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col"><label for="lv18">我同意</label></td>
+			<td><input style="width:auto;" id="lv18" type="checkbox"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>确认校验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">请输入密码</td>
+			<td><input id="myPassword" type="password"/></td>
+		</tr>
+		<tr>
+			<td class="col">请确认密码</td>
+			<td><input id="lv19" type="password"/></td>
+		</tr>
+	</table>
+	<table cellpadding="0">
+		<caption>email校验<a href="#top">顶部</a></caption>
+		<tr>
+			<td class="col">email地址</td>
+			<td><input id="lv20" type="text"/></td>
+		</tr>
+	</table>
+    <table cellpadding="0">
+        <caption>中文<a href="#top">顶部</a></caption>
+        <tr>
+            <td class="col">输入中文</td>
+            <td><input id="lv21" type="text"/></td>
+        </tr>
+    </table>	
+	<div>
 	</div>
-	<script type="text/javascript">
-        Validation.add('.a', 'presence')
-        Validation.add('[name=b]', 'numericality ')
-	</script>
+	<script type="text/javascript" src="use.js"></script>
 </body>
 </html>
