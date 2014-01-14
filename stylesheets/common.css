@@ -187,25 +187,6 @@ th, td {
   border-right: 1px solid #999999;
 }
 
-/********************************** lists **************************************/
-
-ol li {
-  list-style-type: decimal;
-}
-
-ul li {
-  list-style-type: disc;
-}
-
-ol, ul, dl {
-  padding-left: 30px;
-}
-
-dd {
-  margin:0 0 4px 0;
-  background-color: #eeeeee;
-  padding:10px;
-}
 
 /********************************* LiveValidation *************************************/
 

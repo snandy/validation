@@ -3,7 +3,8 @@
 <head>
 	<meta charset='utf-8'/>
 	<title>Validation</title>
-	<link rel="stylesheet" type="text/css" href="stylesheets/common.css" />
+    <link rel="stylesheet" href="stylesheets/styles.css">
+	<link rel="stylesheet" href="stylesheets/common.css" />
 	<style>
         .zv_vali_msg{
             font-weight:bold;
@@ -42,9 +43,7 @@
 			width: 10%;
 			text-align: right;
 		}
-		a {
-			float: right;
-		}
+
 	</style>
 	<!--
 	<script src="../../lib/jquery/jquery-1.10.0.js"></script>
@@ -52,23 +51,45 @@
 	<script type="text/javascript" src="javascripts/validation.standalone.src.js"></script>
 </head>
 <body id="top">
-	<form name="myform" action="">
-		<fieldset>
-			<legend>表单示例</legend>
-			<table cellpadding="0">
-				<tr>
-					<td class="col">用户名：</td>
-					<td><input id="uname" type="text"/></td>
-				</tr>
-				<tr>
-					<td class="col">密码：</td>
-					<td><input id="pwd" type="text"/></td>
-				</tr>
-			</table>
-			<br/>
-			<input type="submit" value="提交"/>
-		</fieldset>
-	</form>
+    <div class="wrapper">
+        <header>
+            <h1>Validation</h1>
+            <p>Validate your forms, frontend, without writting a single line of javascript!</p>
+            <p class="view">
+                <a href="https://github.com/snandy/validation">View the Project on GitHub <small>snandy/validation</small></a>
+            </p>
+            <ul>
+                <li>
+                    <a href="https://github.com/snandy/validation/zipball/master">Download <strong>ZIP File</strong></a>
+                </li>
+                <li>
+                    <a href="https://github.com/snandy/validation/tarball/master">Download <strong>TAR Ball</strong></a>
+                </li>
+                <li>
+                    <a href="https://github.com/snandy/validation">View On <strong>GitHub</strong></a>
+                </li>
+            </ul>
+        </header>    
+        <section>
+        	<form name="myform" action="">
+        		<fieldset>
+        			<legend>表单示例</legend>
+        			<table cellpadding="0">
+        				<tr>
+        					<td class="col">用户名：</td>
+        					<td><input id="uname" type="text"/></td>
+        				</tr>
+        				<tr>
+        					<td class="col">密码：</td>
+        					<td><input id="pwd" type="text"/></td>
+        				</tr>
+        			</table>
+        			<br/>
+        			<input type="submit" value="提交"/>
+        		</fieldset>
+        	</form>
+        </section>
+    </div>
 	<script type="text/javascript">
 		var field1 = new Validation('#uname', {onlyOnSubmit: true });
 		field1.add('presence');
