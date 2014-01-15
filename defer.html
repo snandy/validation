@@ -3,7 +3,8 @@
 <head>
 	<meta charset='utf-8'/>
 	<title>Validation</title>
-	<link rel="stylesheet" type="text/css" href="common.css" />
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/common.css" />
 	<style>
         .zv_vali_msg{
             font-weight:bold;
@@ -42,34 +43,86 @@
 			width: 10%;
 			text-align: right;
 		}
-		a {
-			float: right;
-		}
 	</style>
 	<!--
 	<script src="../../lib/jquery/jquery-1.10.0.js"></script>
 	-->
-	<script type="text/javascript" src="../validation.standalone.src.js"></script>
+	<script type="text/javascript" src="javascripts/validation.standalone.src.js"></script>
 </head>
 <body>
-	<fieldset>
-		<legend>点击时验证</legend>
-		<table cellpadding="0">
-			<tr>
-				<td class="col">用户名：</td>
-				<td><input id="uname" type="text"/></td>
-			</tr>
-			<tr>
-				<td class="col">密码：</td>
-				<td><input id="pwd" type="text"/></td>
-			</tr>
-		</table>
-		<br/>
-		<input type="button" value="提交"/>
-	</fieldset>
+    <div class="wrapper">
+        <header>
+            <h1>Validation</h1>
+            <p>Validate your forms, frontend, without writting a single line of javascript!</p>
+            <p class="view">
+                <a href="https://github.com/snandy/validation">View the Project on GitHub <small>snandy/validation</small></a>
+            </p>
+            <ul>
+                <li>
+                    <a href="https://github.com/snandy/validation/zipball/master">Download <strong>ZIP File</strong></a>
+                </li>
+                <li>
+                    <a href="https://github.com/snandy/validation/tarball/master">Download <strong>TAR Ball</strong></a>
+                </li>
+                <li>
+                    <a href="https://github.com/snandy/validation">View On <strong>GitHub</strong></a>
+                </li>
+            </ul>
+        </header>
+        <section>
+            <form>
+            	<fieldset>
+            		<legend>点击验证</legend>
+            		<table cellpadding="0">
+            			<tr>
+            				<td class="col">用户名：</td>
+            				<td><input id="uname" type="text"/></td>
+            			</tr>
+            			<tr>
+            				<td class="col">密码：</td>
+            				<td><input id="pwd" type="text"/></td>
+            			</tr>
+            		</table>
+            		<br/>
+                    <a href="javascript:;" id="btn">提交</a>
+            	</fieldset>
+            </form>
+
+<br>
+<p>有时需要自行决定验证时机，非keyup、blur、submit等事件。每个Validation对象有一个formObj，改对象暂存了所有的输入域验证状态，只需要取出它执行execValidate即可，该方法返回true或false，表明所有的输入域验证成功与否。</p>
+<p>代码：</p>
+<code><pre>
+var field1 = Validation.add('#uname', 'presence');
+var field2 = Validation.add('#pwd', 'presence');
+
+var util = Validation.Util
+var button = util.$('#btn')[0]
+button.onclick = function() {
+    var pass = field1.formObj.execValidate()
+    if (pass) {
+        // todo what you want do
+    } else {
+        // just fire off
+    }
+}
+</pre></code>            
+            </section>
+    </div>
 	<script type="text/javascript">
-		var field1 = Validation.add('#uname', 'presence');
-		var field2 = Validation.add('#pwd', 'presence');
+        var field1 = Validation.add('#uname', 'presence');
+        var field2 = Validation.add('#pwd', 'presence');
+
+        var util = Validation.Util
+        var button = util.$('#btn')[0]
+        button.onclick = function() {
+            var pass = field1.formObj.execValidate()
+            console.log(pass)
+            if (pass) {
+                // todo what you want do
+            } else {
+                // just fire off
+            }
+        }
 	</script>
 </body>
 </html>
