@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2014-01-15 16:49:49
+ * @snandy 2014-01-15 18:17:36
  *
  */
 ~function(win, doc, undefined) {
@@ -502,18 +502,20 @@ var Validate = {
  *   option properties: 
  *      succMsg {String}            正确的提示消息 ,如果没传，将从输入域的data-vali-succmsg取  (默认 "填写正确")
  *      afterWhatNode {Element}     提示信息插入的位置，如果该元素存在在插入它后面 (默认插在输入域的后面)
- *      onlyOnBlur {Bool}             是否仅在光标离验证 (默认false)
+ *      onlyOnBlur {Bool}           是否仅在光标离验证 (默认false)
  *      onlyOnSubmit {Bool}         是否仅在Form提交时验证
  *      wait {int}                  延迟验证的时间 (默认0)
  *      
  *      beforeValidate {Function}   验证前的回调函数 (默认 noop)
+
  *      beforeSucc {Function}       验证正确时执行，在onValid前 
  *      onSucc {Function}           验证正确函数，此函数将覆盖默认处理函数，你必须实现将正确提示消息展现到UI
  *      afterSucc {Function}        验证正确时执行，在onValid后
  * 
- *      beforeFail {Function}       验证失败时执行，在onInValid前
- *      onFail {Function}           验证失败函数，此函数将覆盖默认处理函数，你必须实现将失败提示消息展现到UI
- *      afterFail {Function}        验证失败时执行，在onValid后
+ *      beforeError {Function}      验证失败时执行，在onInValid前
+ *      onError {Function}          验证失败函数，此函数将覆盖默认处理函数，你必须实现将失败提示消息展现到UI
+ *      afterError {Function}       验证失败时执行，在onValid后
+ 
  *      afterValidate {Function}    验证前的回调函数 (默认 noop)
  * 
  */
@@ -588,9 +590,6 @@ Validation.prototype = {
         
         // 是否仅在form提交的时候验证，默认否
         this.onlyOnSubmit = option.onlyOnSubmit || false
-
-        // 延迟验证的设定
-        this.wait = option.wait || 0
         
         // events 验证前、验证后、验证中
 
@@ -606,12 +605,12 @@ Validation.prototype = {
         this.afterSucc = option.afterSucc || noop
 
         // 验证不通过
-        this.beforeFail = option.beforeFail || noop
-        this.onFail = option.onFail || function() {
+        this.beforeError = option.beforeError || noop
+        this.onError = option.onError || function() {
             this.insertMessage(createMessage('', this.message))
             this.addFieldClass()
         }
-        this.afterFail  = option.afterFail || noop
+        this.afterError  = option.afterError || noop
 
         // 验证后
         this.afterValidate = option.afterValidate || noop
@@ -631,7 +630,7 @@ Validation.prototype = {
         
         var self = this
         elem.onfocus = function(e) {
-            self.removeMessageAndFieldClass()
+            self.reset()
             return self.oldOnFocus.call(this, e)
         }
         
@@ -654,7 +653,7 @@ Validation.prototype = {
             default:
                 if (!this.onlyOnBlur) {
                     elem.onkeyup = function(e) {
-                        self.deferValidation()
+                        self.validate(e)
                         return self.oldOnKeyup.call(this, e)
                     }
                 }
@@ -690,7 +689,7 @@ Validation.prototype = {
             }
         }
         this.validations = []
-        this.removeMessageAndFieldClass()
+        this.reset()
     },
     add: function(op, option) {
         var self = this
@@ -716,14 +715,6 @@ Validation.prototype = {
             }
         })
         this.validations = victimless
-    },
-    deferValidation: function(e) {
-        var self = this
-        if (self.wait >= 300) self.removeMessageAndFieldClass()
-        if (self.timeout) clearTimeout(self.timeout)
-        self.timeout = setTimeout(function() {
-            self.validate()
-        }, self.wait)
     },
     doValidation: function() {
         var validations = this.validations
@@ -791,9 +782,9 @@ Validation.prototype = {
             this.onSucc()
             this.afterSucc()
         } else {
-            this.beforeFail()
-            this.onFail()
-            this.afterFail()
+            this.beforeError()
+            this.onError()
+            this.afterError()
         }
         this.afterValidate()
         return isValid
@@ -855,7 +846,7 @@ Validation.prototype = {
             this.elem.className = cls.split(fieldSuccClass).join(' ')
         }
     },
-    removeMessageAndFieldClass: function() {
+    reset: function() {
         this.removeMessage()
         this.removeFieldClass()
     }
