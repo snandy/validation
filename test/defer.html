@@ -52,24 +52,40 @@
 	<script type="text/javascript" src="../validation.standalone.src.js"></script>
 </head>
 <body>
-	<fieldset>
-		<legend>点击时验证</legend>
-		<table cellpadding="0">
-			<tr>
-				<td class="col">用户名：</td>
-				<td><input id="uname" type="text"/></td>
-			</tr>
-			<tr>
-				<td class="col">密码：</td>
-				<td><input id="pwd" type="text"/></td>
-			</tr>
-		</table>
-		<br/>
-		<input type="button" value="提交"/>
-	</fieldset>
+    <form>
+    	<fieldset>
+    		<legend>点击时验证</legend>
+    		<table cellpadding="0">
+    			<tr>
+    				<td class="col">用户名：</td>
+    				<td><input id="uname" type="text"/></td>
+    			</tr>
+    			<tr>
+    				<td class="col">密码：</td>
+    				<td><input id="pwd" type="text"/></td>
+    			</tr>
+    		</table>
+    		<br/>
+    		<input type="button" value="提交"/>
+    	</fieldset>
+    </form>
 	<script type="text/javascript">
 		var field1 = Validation.add('#uname', 'presence');
 		var field2 = Validation.add('#pwd', 'presence');
+
+        var util = Validation.Util
+        var button = util.$('[type=button]')[0]
+
+        button.onclick = function() {
+            var pass = field1.formObj.execValidate()
+            console.log(pass)
+            if (pass) {
+                // todo what you want do
+            } else {
+                // just fire off
+            }
+        }
+
 	</script>
 </body>
 </html>

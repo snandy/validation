@@ -142,11 +142,6 @@ Validation.prototype = {
         
         // 仅在form submit时验证
         if (this.onlyOnSubmit) return
-        
-        // 自行决定验证时机
-        if (this.onlyOnAsync) {
-
-        }
 
         switch (this.elemType) {
             case TYPE.checkbox:
