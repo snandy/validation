@@ -365,14 +365,14 @@ input {
   font-style: italic;
 }
 /* For Validation */
-.zv_vali_msg{
+.zv_valid_msg {
     font-weight:bold;
     margin:0 0 0 5px;
-} 
-.zv_valid {
     color:#00CC00;
 }
-.zv_invalid {
+.zv_invalid_msg {
+    font-weight:bold;
+    margin:0 0 0 5px;            
     color:#CC0000;
 }
 .zv_succ_field,
