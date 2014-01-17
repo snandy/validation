@@ -29,14 +29,11 @@
         textarea.LV_invalid_field:active {
             border: 1px solid #CC0000;
         }
-		a {
-			float: right;
-		}
 	</style>
 	<script type="text/javascript" src="../validation.standalone.src.js"></script>
 </head>
 <body>
     <p>　必填项：<input data-validate="presence" type="text"/></p>
-    <p>输入中文：<input data-validate="chinese"  data-validate-err="填中文吧，谢谢" data-validate-succ="恭喜，填对了" type="text"/></p>
+    <p>输入中文：<input data-validate="chinese"  data-error-msg="填中文吧，谢谢" data-succ-msg="恭喜，填对了" type="text"/></p>
 </body>
 </html>
