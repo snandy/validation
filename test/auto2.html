@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title>Validation automatic performance</title>
+    <link rel="stylesheet" type="text/css" href="common.css" />
+    <style>
+        .zv_valid_msg {
+            font-weight:bold;
+            margin:0 0 0 5px;
+            color:#00CC00;
+        }
+        .zv_invalid_msg {
+            font-weight:bold;
+            margin:0 0 0 5px;            
+            color:#CC0000;
+        }    
+        .hide {
+            display: none;
+        }
+
+    </style>
+    <script type="text/javascript" src="../validation.standalone.src.js" data-run="true"></script>
+</head>
+<body>
+    <form id="form1">
+        <fieldset>
+            <p>　
+                必填项: <input data-validate="presence" data-succ-msg="哦了" data-error-msg="用户姓名为必填哦" name="uname"/>
+                <br>
+                　　　　&nbsp;<span class="hide" data-zvmsg="uname"></span>
+            </p>
+            <p>
+                输入中文:&nbsp;&nbsp;<input name="pwd" data-validate="presence chinese"  data-error-msg="填中文吧，谢谢" data-succ-msg="恭喜，填对了" type="text"/>
+                <br>
+                　　　　&nbsp;<span class="hide" data-zvmsg="pwd"></span>
+            </p>
+            <p>
+                <input id="btn" type="button" value="Submit"/>
+            </p>
+        </fieldset>
+    </form>
+
+    <script type="text/javascript">
+        var $ = Validation.Util.$
+        var btn = $('#btn')[0]
+        var form1 = $('#form1')[0]
+        btn.onclick = function() {
+            var boo = form1.valiObj.execValidate()
+            if (boo) {
+                console.log(form1.valiObj)
+            } else {
+                console.log(false)
+            }
+        }
+
+    </script>
+</body>
+</html>

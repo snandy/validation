@@ -58,7 +58,7 @@
 			<table cellpadding="0">
 				<tr>
 					<td class="col">用户名：</td>
-					<td><input id="uname" type="text"/></td>
+					<td><input id="uname" type="text" data-zvmsg="us"/></td>
 				</tr>
 				<tr>
 					<td class="col">密码：</td>
@@ -74,6 +74,8 @@
 		field1.add('presence');
 		var field2 = new Validation('#pwd', {onlyOnSubmit: true });
 		field2.add('presence');
+
+        alert(Validation.Util.$('[data-zvmsg]'))
 	</script>
 </body>
 </html>

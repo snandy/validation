@@ -1,15 +1,18 @@
-/*
- * 自执行验证，通过element上的Script的data-run="true"
- * 
+/**
+ * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
+ * @param {DOM Element} container
  */
-~function() {
-    var oldOnload = win.onload
-    win.onload = function() {
-        var canRun = single('script[data-run=true]')
-        if (!canRun) return
-        var selector = canRun.getAttribute('data-container')
-        var container = $(selector)
-        Validation.init(container)
-        if (oldOnload) oldOnload.call(win)
-    }
-}()
+var oldOnload = win.onload
+win.onload = function() {
+    var run = single('script[data-run=true]')
+    if (!run) return
+    var selector = run.getAttribute('data-container')
+    var container = $(selector)
+    var elems = $('[data-validate]', container)
+    Util.forEach(elems, function(elem) {
+        var vali = new Validation(elem)
+        vali.add(elem.getAttribute('data-validate'))
+    })
+    if (oldOnload) oldOnload.call(win)
+}
+

@@ -24,6 +24,22 @@ function single(selector) {
 }
 Util.$ = $
 
+function addClass(elem, str) {
+    if (win.jQuery) {
+        return win.jQuery(elem).addClass(str)
+    } else if (typeof domClass !== 'undefined') {
+        return domClass.add(elem, str)
+    }
+}
+
+function removeClass(elem, str) {
+    if (win.jQuery) {
+        return win.jQuery(elem).removeClass(str)
+    } else if (typeof domClass !== 'undefined') {
+        return domClass.remove(elem, str)
+    }
+}
+
 // Error class
 function ZVError(errorMsg) {
     this.message = errorMsg

@@ -7,21 +7,23 @@
  *   option properties: 
  *      succMsg {String}            正确的提示消息 ,如果没传，将从输入域的data-vali-succmsg取  (默认 "填写正确")
  *      afterWhatNode {Element}     提示信息插入的位置，如果该元素存在在插入它后面 (默认插在输入域的后面)
+ *      msg {String}                提示信息元素的选择器，此时优先使用该dom元素，不自行创建 （[data-zvmsg=xx]）
  *      onlyOnBlur {Bool}           是否仅在光标离验证 (默认false)
  *      onlyOnSubmit {Bool}         是否仅在Form提交时验证
- *      wait {int}                  延迟验证的时间 (默认0)
+ *      fieldSuccClass {String}     输入域 正确时class (可选)
+ *      fieldFailClass {String}     输入域 错误时class (可选)
  *      
- *      beforeValidate {Function}   验证前的回调函数 (默认 noop)
+ *      beforeValidate {Function}   验证前的回调函数 (可选)
 
- *      beforeSucc {Function}       验证正确时执行，在onValid前 
- *      onSucc {Function}           验证正确函数，此函数将覆盖默认处理函数，你必须实现将正确提示消息展现到UI
- *      afterSucc {Function}        验证正确时执行，在onValid后
+ *      beforeSucc {Function}       验证正确时执行，在onValid前 (可选)
+ *      onSucc {Function}           验证正确函数，此函数将覆盖默认处理函数，你必须实现将正确提示消息展现到UI (可选)
+ *      afterSucc {Function}        验证正确时执行，在onValid后 (可选)
  * 
- *      beforeError {Function}      验证失败时执行，在onInValid前
- *      onError {Function}          验证失败函数，此函数将覆盖默认处理函数，你必须实现将失败提示消息展现到UI
- *      afterError {Function}       验证失败时执行，在onValid后
- 
- *      afterValidate {Function}    验证前的回调函数 (默认 noop)
+ *      beforeError {Function}      验证失败时执行，在onInValid前 (可选)
+ *      onError {Function}          验证失败函数，此函数将覆盖默认处理函数，你必须实现将失败提示消息展现到UI (可选)
+ *      afterError {Function}       验证失败时执行，在onValid后 (可选)
+
+ *      afterValidate {Function}    验证前的回调函数 (可选)
  * 
  */
 function Validation(elem, option) {
@@ -30,12 +32,6 @@ function Validation(elem, option) {
     if (!this.elem) throw new Error('element is not exits')
     this.initialize(option)
 }
-
-var validClass = 'zv_valid'
-var invalidClass = 'zv_invalid'
-var messageClass = 'zv_vali_msg'
-var fieldSuccClass = 'zv_succ_field'
-var fieldFailClass = 'zv_fail_field'
 
 /**
  * 获取被验证元素的类型
@@ -63,32 +59,45 @@ function getType(elem) {
     }
 }
 
-/**
- * 创建提示信息，默认是span元素
- */
-function createMessage(tag, msg) {
-    var span = doc.createElement(tag || 'span')
-    var textNode = doc.createTextNode(msg)
-    span.appendChild(textNode)
-    return span
-}
-
 Validation.prototype = {
     initialize: function(option) {
         var elem = this.elem
-        this.validations = []
+        option = option || {}
+
+        this.rules = []
         this.elemType = getType(elem)
         this.form = elem.form
+        this.fieldSuccClass  = option.fieldSuccClass  || 'zv_succ_field'
+        this.fieldFailClass  = option.fieldFailClass  || 'zv_fail_field'
+        this.msgValidClass   = option.msgValidClass   || 'zv_valid_msg'
+        this.msgInvalidClass = option.msgInvalidClass || 'zv_invalid_msg'
 
+        // 提示语插入在哪个元素后面，可以是dom元素或css选择器
+        var whatNode = option.afterWhatNode || elem
+        this.afterWhatNode = whatNode.nodeType ? whatNode : single(whatNode)
+
+        option.msg = option.msg || elem.getAttribute('name')
+        this.elemMsg = single('[data-zvmsg=' + option.msg + ']', this.form)
+
+        // 两种情形，页面上有提示语则不创建
+        if (!this.elemMsg) {
+            this.elemMsg = doc.createElement('span')
+            var parent = whatNode.parentNode
+            if (whatNode.nextSibling) {
+                parent.insertBefore(this.elemMsg, whatNode.nextSibling)
+            } else {
+                parent.appendChild(this.elemMsg)
+            }
+        }
+
+        var self = this
+        var elemMsg = this.elemMsg
         // options
         var option = option || {}
 
         // 验证正确的提示语
         this.succMsg = option.succMsg || elem.getAttribute('data-succ-msg') || '填写正确'
 
-        // 提示语插入在哪个元素后面，可以是dom元素或css选择器
-        var node = option.afterWhatNode || elem
-        this.afterWhatNode = node.nodeType ? node : single(node)
 
         // 是否仅在鼠标离开时验证，默认否
         this.onlyOnBlur = option.onlyOnBlur || false
@@ -104,16 +113,28 @@ Validation.prototype = {
         // 验证通过
         this.beforeSucc = option.beforeSucc || noop
         this.onSucc = option.onSucc || function() {
-            this.insertMessage(createMessage('', this.message))
-            this.addFieldClass()
+            if (elem.value !== '' || this.showMessageWhenEmpty) {
+                elemMsg.innerText = this.message
+                elemMsg.className = this.msgValidClass
+                elemMsg.style.display = ''
+
+                // 输入域正确时的样式
+                addClass(this.elem, this.fieldSuccClass)
+            }
         }
         this.afterSucc = option.afterSucc || noop
 
         // 验证不通过
         this.beforeError = option.beforeError || noop
         this.onError = option.onError || function() {
-            this.insertMessage(createMessage('', this.message))
-            this.addFieldClass()
+            if (elem.value !== '' || this.showMessageWhenEmpty) {
+                elemMsg.innerText = this.message
+                elemMsg.className = this.msgInvalidClass
+                elemMsg.style.display = ''
+
+                // 输入域错误时的样式
+                addClass(this.elem, this.fieldFailClass)
+            }
         }
         this.afterError  = option.afterError || noop
 
@@ -127,18 +148,17 @@ Validation.prototype = {
         }
 
         // 暂存旧事件hander
-        this.oldOnFocus  = elem.onfocus  || noop
+        this.oldOnfocus  = elem.onfocus  || noop
         this.oldOnBlur   = elem.onblur   || noop
         this.oldOnClick  = elem.onclick  || noop
         this.oldOnChange = elem.onchange || noop
         this.oldOnKeyup  = elem.onkeyup  || noop
         
-        var self = this
         elem.onfocus = function(e) {
             self.reset()
-            return self.oldOnFocus.call(this, e)
+            self.oldOnfocus.call(this, e)
         }
-        
+
         // 仅在form submit时验证
         if (this.onlyOnSubmit) return
 
@@ -168,34 +188,6 @@ Validation.prototype = {
                 }
         }
     },
-    destroy: function() {
-        if (this.formObj) {
-            // remove the field from the ValidationForm
-            this.formObj.removeField(this)
-            // destroy the ValidationForm if no Validation fields left in it
-            this.formObj.destroy()
-        }
-        // remove events - set them back to the previous events
-        this.elem.onfocus = this.oldOnFocus
-        if (!this.onlyOnSubmit) {
-            switch (this.elemType) {
-                case TYPE.checkbox:
-                    this.elem.onclick = this.oldOnClick
-                // let it run into the next to add a change event too
-                case TYPE.select:
-                case TYPE.file:
-                    this.elem.onchange = this.oldOnChange
-                    break
-                default:
-                    if (!this.onlyOnBlur) {
-                        this.elem.onkeyup = this.oldOnKeyup
-                    }
-                    this.elem.onblur = this.oldOnBlur
-            }
-        }
-        this.validations = []
-        this.reset()
-    },
     add: function(op, option) {
         var self = this
         option = option || {}
@@ -204,7 +196,7 @@ Validation.prototype = {
         }
         if ( Util.isString(op) ) {
             forEach(op.split(' '), function(n, i) {
-                self.validations.push({
+                self.rules.push({
                     validateFunc: Validate[n],
                     params: option
                 })
@@ -212,21 +204,21 @@ Validation.prototype = {
         }
     },
     remove: function(func, option) {
-        var validations = this.validations
+        var rules = this.rules
         var victimless = []
-        forEach(validations, function(obj) {
+        forEach(rules, function(obj) {
             if (obj.type != func && obj.params != option) {
                 victimless.push(obj)
             }
         })
-        this.validations = victimless
+        this.rules = victimless
     },
     doValidation: function() {
-        var validations = this.validations
-        var length = validations.length
+        var rules = this.rules
+        var length = rules.length
         this.validateFailed = false
         for (var i = 0; i < length; ++i) {
-            var vs = validations[i]
+            var vs = rules[i]
             this.validateFailed = !this.perform(vs.validateFunc, vs.params)
             if (this.validateFailed) {
                 return false
@@ -267,9 +259,8 @@ Validation.prototype = {
             if (error instanceof ZVError) {
                 if (val !== '' || (val === '' && this.showMessageWhenEmpty)) {
                     this.validateFailed = true
-                    // Opera 10 adds stacktrace after newline
-                    this.message = error.message.split('\n')[0]
                     isValid = false
+                    this.message = error.message
                 }
             } else {
                 throw error
@@ -294,66 +285,10 @@ Validation.prototype = {
         this.afterValidate()
         return isValid
     },
-    insertMessage: function(elem) {
-        this.removeMessage()
-
-        // dont insert anything if vaalidMesssage has been set to false or empty string
-        if (!this.validateFailed && !this.succMsg) return
-        
-        var val = this.elem.value
-        var whatNode = this.afterWhatNode
-        if ( (this.showMessageWhenEmpty && (this.elemType === TYPE.checkbox || val === '')) || val !== '' ) {
-            var className = this.validateFailed ? invalidClass : validClass
-            elem.className += ' ' + messageClass + ' ' + className;
-            var parent = whatNode.parentNode
-            if (whatNode.nextSibling) {
-                parent.insertBefore(elem, whatNode.nextSibling)
-            } else {
-                parent.appendChild(elem)
-            }
-        }
-    },
-    addFieldClass: function() {
-        var elem = this.elem        
-        this.removeFieldClass()
-        if (!this.validateFailed) {
-            if (this.showMessageWhenEmpty || elem.value !== '') {
-                if (elem.className.indexOf(fieldSuccClass) === -1) {
-                    elem.className += ' ' + fieldSuccClass
-                }
-            }
-        } else {
-            if (elem.className.indexOf(fieldFailClass) === -1) {
-                elem.className += ' ' + fieldFailClass
-            }
-        }
-    },
-    removeMessage: function() {
-        var nextEl
-        var el = this.afterWhatNode
-        while (el.nextSibling) {
-            if (el.nextSibling.nodeType === 1) {
-                nextEl = el.nextSibling
-                break
-            }
-            el = el.nextSibling
-        }
-        if (nextEl && nextEl.className.indexOf(messageClass) != -1) {
-            this.afterWhatNode.parentNode.removeChild(nextEl)
-        }
-    },
-    removeFieldClass: function() {
-        var cls = this.elem.className
-        if (cls.indexOf(fieldFailClass) !== -1) {
-            this.elem.className = cls.split(fieldFailClass).join('')
-        }
-        if (cls.indexOf(fieldSuccClass) !== -1) {
-            this.elem.className = cls.split(fieldSuccClass).join(' ')
-        }
-    },
     reset: function() {
-        this.removeMessage()
-        this.removeFieldClass()
+        this.elemMsg.style.display = 'none'
+        removeClass(this.elem, this.fieldSuccClass)
+        removeClass(this.elem, this.fieldFailClass)
     }
 }
 
@@ -368,17 +303,6 @@ Validation.add = function(elem, validate, instanceOption, validateOption) {
     var vObj = new Validation(elem, instanceOption)
     vObj.add(validate, validateOption)
     return vObj
-}
-/**
- * 根据输入域的data-validate进行初始化，只需添加data-validate属性就自动完成验证，无需写一行JS代码
- * @param {DOM Element} container
- */
-Validation.init = function(container) {
-    var elems = $('[data-validate]', container)
-    Util.forEach(elems, function(elem) {
-        var vali = new Validation(elem)
-        vali.add(elem.getAttribute('data-validate'))
-    })
 }
 
 // exports Util to Validation

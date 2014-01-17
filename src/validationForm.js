@@ -37,7 +37,9 @@ ValidationForm.getInstance = function(elem) {
     if (!formInstance[el.id]) {
         formInstance[el.id] = new ValidationForm(el)
     }
-    return formInstance[el.id]
+
+    // exprots to form element and return
+    return el.valiObj = formInstance[el.id]
 }
 ValidationForm.prototype = {
     addField: function(field) {
@@ -58,13 +60,5 @@ ValidationForm.prototype = {
             if (returnValue) returnValue = valid
         })
         return returnValue
-    },
-    destroy: function(force) {
-        if (this.fields.length != 0 && !force) return false
-        // remove events - set back to previous events
-        this.elem.onsubmit = this.oldOnSubmit
-        // remove from the instances namespace
-        formInstance[this.name] = null
-        return true
     }
 };
