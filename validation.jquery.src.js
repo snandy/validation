@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2014-01-17 17:25:51
+ * @snandy 2014-03-26 17:40:50
  *
  */
 ~function(win, doc, undefined) {
@@ -114,9 +114,9 @@ var Validate = {
         var suppliedVal = val
         var val = Number(val)
         var option = option || {}
-        var min = ((option.min) || (option.min === 0)) ? option.min : null
-        var max = ((option.max) || (option.max === 0)) ? option.max : null
-        var is  = ((option.is)  || (option.is === 0))  ? option.is  : null
+        var min = (option.min || (option.min === 0)) ? option.min : null
+        var max = (option.max || (option.max === 0)) ? option.max : null
+        var is  = (option.is  || (option.is === 0))  ? option.is  : null
         var notANumberMsg   = option.notANumberMsg   || '必须是数字!'
         var notAnIntegerMsg = option.notAnIntegerMsg || '必须为整数!'
         var wrongNumberMsg  = option.wrongNumberMsg  || '必须为' + is + '!'

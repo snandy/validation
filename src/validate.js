@@ -35,9 +35,9 @@ var Validate = {
         var suppliedVal = val
         var val = Number(val)
         var option = option || {}
-        var min = ((option.min) || (option.min === 0)) ? option.min : null
-        var max = ((option.max) || (option.max === 0)) ? option.max : null
-        var is  = ((option.is)  || (option.is === 0))  ? option.is  : null
+        var min = (option.min || (option.min === 0)) ? option.min : null
+        var max = (option.max || (option.max === 0)) ? option.max : null
+        var is  = (option.is  || (option.is === 0))  ? option.is  : null
         var notANumberMsg   = option.notANumberMsg   || '必须是数字!'
         var notAnIntegerMsg = option.notAnIntegerMsg || '必须为整数!'
         var wrongNumberMsg  = option.wrongNumberMsg  || '必须为' + is + '!'
