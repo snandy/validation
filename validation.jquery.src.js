@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2014-03-26 17:40:50
+ * @snandy 2014-05-06 11:00:51
  *
  */
 ~function(win, doc, undefined) {
@@ -84,7 +84,7 @@ function ZVError(errorMsg) {
 var Validate = {
     /**
      * 验证是否存在 ，必填项
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      failureMsg {String} 错误提示语
      */
@@ -98,7 +98,7 @@ var Validate = {
     },
     /**
      * 数字验证
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      is  {Number}             特定数
      *      min {Number}             指定最小约束数
@@ -148,7 +148,7 @@ var Validate = {
     },
     /**
      * 格式化验证
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      failureMsg {String} 错误提示语
      *      pattern {RegExp} 正则
@@ -166,7 +166,7 @@ var Validate = {
     },
     /**
      * email验证
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      faliureMsg {Stirng} 错误提示
      *      pattern {RegExp} 
@@ -180,7 +180,7 @@ var Validate = {
     },
     /**
      * 长度验证
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      is {Number}  指定长度
      *      min {Number} 低限
@@ -219,7 +219,7 @@ var Validate = {
     },
     /**
      * 包含校验
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      failureMsg {String} 错误提示
      */
@@ -261,7 +261,7 @@ var Validate = {
     },
     /**
      * 排除校验
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      failureMsg {String} 错误提示
      */
@@ -274,7 +274,7 @@ var Validate = {
     },
     /**
      * 中文校验
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      failureMsg {String} 错误提示
      */
@@ -289,7 +289,7 @@ var Validate = {
     },
     /**
      * 手机号校验
-     * @param {Object} val
+     * @param {String} val
      * @param {Object} option
      *      failureMsg {String} 错误提示
      */    
@@ -297,11 +297,26 @@ var Validate = {
         var option = option || {}
         var msg = option.failureMsg || '请输入正确的手机号!'
 
-        // 必须为11位
-        var leng = val.length === 11
+        // 验证正则
+        // var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
+        var reg = /^1(?:[38]\d|4[57]|5[012356789]|70)\d{8}$/
+        if (!reg.test(val)) {
+            Validate.fail(msg)
+        }
+        return true
+    },
+    /*
+     * 身份证号验证
+     * @param {String} val
+     * @param {Object} option
+     *      failureMsg {String} 错误提示
+     */
+    identity: function(val, option) {
+        var option = option || {}
+        var msg = option.failureMsg || '请输入正确的身份证号码!'
 
         // 验证正则
-        var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
+        var reg = /^[1-9]\d{14}(\d{2}[0-9X])?$/
         if (!reg.test(val)) {
             Validate.fail(msg)
         }
@@ -465,7 +480,7 @@ Validation.prototype = {
         this.beforeSucc = option.beforeSucc || noop
         this.onSucc = option.onSucc || function() {
             if (elem.value !== '' || this.showMessageWhenEmpty) {
-                elemMsg.innerText = this.message
+                elemMsg.innerHTML = this.message
                 elemMsg.className = this.msgValidClass
                 elemMsg.style.display = ''
 
@@ -479,7 +494,7 @@ Validation.prototype = {
         this.beforeError = option.beforeError || noop
         this.onError = option.onError || function() {
             if (elem.value !== '' || this.showMessageWhenEmpty) {
-                elemMsg.innerText = this.message
+                elemMsg.innerHTML = this.message
                 elemMsg.className = this.msgInvalidClass
                 elemMsg.style.display = ''
 

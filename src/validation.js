@@ -114,7 +114,7 @@ Validation.prototype = {
         this.beforeSucc = option.beforeSucc || noop
         this.onSucc = option.onSucc || function() {
             if (elem.value !== '' || this.showMessageWhenEmpty) {
-                elemMsg.innerText = this.message
+                elemMsg.innerHTML = this.message
                 elemMsg.className = this.msgValidClass
                 elemMsg.style.display = ''
 
@@ -128,7 +128,7 @@ Validation.prototype = {
         this.beforeError = option.beforeError || noop
         this.onError = option.onError || function() {
             if (elem.value !== '' || this.showMessageWhenEmpty) {
-                elemMsg.innerText = this.message
+                elemMsg.innerHTML = this.message
                 elemMsg.className = this.msgInvalidClass
                 elemMsg.style.display = ''
 

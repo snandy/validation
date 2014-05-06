@@ -66,3 +66,7 @@ zv20Obj.add('chinese')
 
 var zv22Obj = new Validation('#lv22')
 zv22Obj.add('mobile')
+
+var zv22Obj = new Validation('#lv23')
+zv22Obj.add('identity')
+
