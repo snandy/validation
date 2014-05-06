@@ -224,6 +224,7 @@ var Validate = {
         // 验证正则
         // var reg = /^1(?:[38]\d|4[57]|5[012356789])\d{8}$/
         var reg = /^1(?:[38]\d|4[57]|5[012356789]|70)\d{8}$/
+        var identity = /^[1-9]\d{14}(\d{2}[0-9X])?$/
         if (!reg.test(val)) {
             Validate.fail(msg)
         }
