@@ -2,7 +2,7 @@
  * Validation.js v0.1.0
  * http://snandy.github.io/validation
  * Original idea: www.livevalidation.com (Copyright 2007-2010 Alec Hill)
- * @snandy 2014-05-06 11:00:51
+ * @snandy 2014-08-29 16:45:38
  *
  */
 ~function(win, doc, undefined) {
@@ -295,7 +295,7 @@ var TYPE = {
 function noop() {}
 
 // If the jQuery exists, use it
-function $(selector) {
+function $$(selector) {
     if (win.jQuery) {
         return win.jQuery(selector)
     } else if (typeof query !== 'undefined') {
@@ -303,9 +303,9 @@ function $(selector) {
     }
 }
 function single(selector) {
-    return $(selector)[0]
+    return $$(selector)[0]
 }
-Util.$ = $
+Util.$ = $$
 
 function addClass(elem, str) {
     if (win.jQuery) {
