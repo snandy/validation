@@ -3,11 +3,11 @@
  *   
  */
 var Validate = {
-    /**
+    /*
      * 验证是否存在 ，必填项
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示语
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示语
      */
     presence: function(val, option) {
         var option = option || {}
@@ -17,19 +17,19 @@ var Validate = {
         }
         return true
     },
-    /**
+    /*
      * 数字验证
-     * @param {String} val
-     * @param {Object} option
-     *      is  {Number}             特定数
-     *      min {Number}             指定最小约束数
-     *      max {Number}             指定最大约束数
-     *      onlyInteger {Bool}       是否仅为整数
-     *      notANumberMsg {String}   非数字提示语
-     *      notAnIntegerMsg {String} 非整数提示语
-     *      wrongNumberMsg {String}  非特定数提示语
-     *      tooLowMsg {String}       太小提示语
-     *      tooHighMsg {String}      太大提示语
+     * @param {string} val
+     * @param {object} option
+     *    is  {Number}             特定数
+     *    min {Number}             指定最小约束数
+     *    max {Number}             指定最大约束数
+     *    onlyInteger {Bool}       是否仅为整数
+     *    notANumberMsg {string}   非数字提示语
+     *    notAnIntegerMsg {string} 非整数提示语
+     *    wrongNumberMsg {string}  非特定数提示语
+     *    tooLowMsg {string}       太小提示语
+     *    tooHighMsg {string}      太大提示语
      */
     numericality: function(val, option) {
         var suppliedVal = val
@@ -46,7 +46,7 @@ var Validate = {
         
         if ( !isFinite(val) ) Validate.fail(notANumberMsg)
         
-        if ( option.onlyInteger && (/\.0+$|\.$/.test(String(suppliedVal)) || val != parseInt(val)) ) {
+        if ( option.onlyInteger && (/\.0+$|\.$/.test(string(suppliedVal)) || val != parseInt(val)) ) {
             Validate.fail(notAnIntegerMsg)
         }
         
@@ -67,11 +67,11 @@ var Validate = {
         }
         return true
     },
-    /**
+    /*
      * 格式化验证
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示语
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示语
      *      pattern {RegExp} 正则
      *      negate {Bool} 
      */
@@ -85,10 +85,10 @@ var Validate = {
         if (negate && pattern.test(val)) Validate.fail(message)   // negated
         return true
     },
-    /**
+    /*
      * email验证
-     * @param {String} val
-     * @param {Object} option
+     * @param {string} val
+     * @param {object} option
      *      faliureMsg {Stirng} 错误提示
      *      pattern {RegExp} 
      */
@@ -99,16 +99,16 @@ var Validate = {
         Validate.format(val, {failureMsg: message, pattern: reg})
         return true
     },
-    /**
+    /*
      * 长度验证
-     * @param {String} val
-     * @param {Object} option
+     * @param {string} val
+     * @param {object} option
      *      is {Number}  指定长度
      *      min {Number} 低限
      *      max {Number} 高限
-     *      wrongSizeMsg {String} 指定长度错误提示
-     *      tooShortMsg {String} 低限错误提示
-     *      tooLongMsg {String} 高限错误提示
+     *      wrongSizeMsg {string} 指定长度错误提示
+     *      tooShortMsg {string} 低限错误提示
+     *      tooLongMsg {string} 高限错误提示
      */
     size: function(val, option) {
         var val = String(val)
@@ -138,11 +138,11 @@ var Validate = {
         }
         return true
     },
-    /**
+    /*
      * 包含校验
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示
      */
     inclusion: function(val, option) {
         var option = option || {}
@@ -180,11 +180,11 @@ var Validate = {
         }
         return true
     },
-    /**
+    /*
      * 排除校验
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示
      */
     exclusion: function(val, option) {
         var option = option || {}
@@ -193,11 +193,11 @@ var Validate = {
         Validate.inclusion(val, option)
         return true
     },
-    /**
+    /*
      * 中文校验
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示
      */
     chinese: function(val, option) {
         var option = option || {}
@@ -208,11 +208,11 @@ var Validate = {
         }
         return true
     },
-    /**
+    /*
      * 手机号校验
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示
      */    
     mobile: function(val, option) {
         var option = option || {}
@@ -228,9 +228,9 @@ var Validate = {
     },
     /*
      * 身份证号验证
-     * @param {String} val
-     * @param {Object} option
-     *      failureMsg {String} 错误提示
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示
      */
     identity: function(val, option) {
         var option = option || {}
@@ -265,10 +265,10 @@ var Validate = {
         }
         return true
     },
-    /**
+    /*
      * 自定义验证规则
-     * @param {Object} val
-     * @param {Object} option
+     * @param {object} val
+     * @param {object} option
      */
     custom: function(val, option) {
         var option = option || {}
