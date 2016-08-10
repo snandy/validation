@@ -243,6 +243,22 @@ var Validate = {
         }
         return true
     },
+    /*
+     * HTML tag 验证
+     * @param {string} val
+     * @param {object} option
+     *      failureMsg {string} 错误提示
+     */    
+    html: function(val, option) {
+        var option = option || {}
+        var msg = option.failureMsg || '请输入HTML代码!'
+
+        var rhtml = /<|&#?\w+;/
+        if (!rhtml.test(val)) {
+            Validate.fail(msg)
+        }
+        return true
+    },
     confirmation: function(val, option) {
         if (!option.match) {
             throw new Error('Error validating confirmation: Id of element to match must be provided')
